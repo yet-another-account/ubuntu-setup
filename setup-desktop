@@ -1,0 +1,23 @@
+#!/bin/bash
+
+./setup-ubuntu-base
+
+
+install/docker
+
+install/atom
+install/discord
+install/electrum
+install/gparted
+install/chromium
+install/qbittorrent
+install/duplicity
+
+install/trezord
+
+
+echo "#### Removing unity-webapps-common ####"
+sudo apt-get remove unity-webapps-common -y
+
+echo "#### Installing MySQL Workbench ####"
+apt-get install mysql-workbench -y

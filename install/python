@@ -1,0 +1,18 @@
+#!/bin/bash
+
+[ -e ~/.install/python ] && exit
+
+echo "######### Installing python #########"
+
+sudo apt-get install -y python-software-properties build-essential python-pip python3-pip
+
+pip install -U pip
+pip3 install -U pip
+
+pip install virtualenv
+pip3 install virtualenv
+
+# needed for matplotlib
+apt-get install libpng-dev libfreetype6-dev -y
+
+mkdir -p ~/.install && touch ~/.install/python

@@ -1,0 +1,15 @@
+#!/bin/bash
+
+[ -e ~/.install/trezord ] && exit
+
+echo "######### Installing trezord #########"
+
+wget http://security.ubuntu.com/ubuntu/pool/universe/libm/libmicrohttpd/libmicrohttpd10_0.9.44+dfsg-1ubuntu2_amd64.deb
+sudo dpkg -i libmicrohttpd10_0.9.44+dfsg-1ubuntu2_amd64.deb
+rm libmicrohttpd10_0.9.44+dfsg-1ubuntu2_amd64.deb
+
+wget https://wallet.trezor.io/data/bridge/1.2.1/trezor-bridge_1.2.1_amd64.deb
+sudo dpkg -i trezor-bridge_1.2.1_amd64.deb
+rm trezor-bridge_1.2.1_amd64.deb
+
+mkdir -p ~/.install && touch ~/.install/trezord

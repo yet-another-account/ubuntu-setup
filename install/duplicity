@@ -1,0 +1,11 @@
+#!/bin/bash
+
+[ -e ~/.install/duplicity ] && exit
+
+echo "#### Installing duplicity ####"
+
+apt-get install -y duplicity
+apt-get install --reinstall python-gi -y
+apt-get install python3-pyside -y
+
+mkdir -p ~/.install && touch ~/.install/duplicity

@@ -1,0 +1,11 @@
+#!/bin/bash
+
+[ -e ~/.install/electrum ] && exit
+
+`dirname $0`/python
+echo "######### Installing electrum #########"
+
+sudo apt-get install python3-setuptools python3-pyqt5
+sudo pip3 install https://download.electrum.org/3.0.5/Electrum-3.0.5.tar.gz
+
+mkdir -p ~/.install && touch ~/.install/electrum

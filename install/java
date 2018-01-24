@@ -1,0 +1,28 @@
+#!/bin/bash
+
+[ -e ~/.install/java ] && exit
+
+echo "######### Installing Oracle JDK #########"
+
+# automate license
+echo debconf shared/accepted-oracle-license-v1-1 select true | sudo debconf-set-selections
+echo debconf shared/accepted-oracle-license-v1-1 seen true | sudo debconf-set-selections
+
+sudo apt-get install dirmngr -y
+
+# add Oracle JDK keys
+sudo apt-get install software-properties-common -y
+echo "deb http://ppa.launchpad.net/webupd8team/java/ubuntu precise main" | sudo tee -a /etc/apt/sources.list
+echo "deb-src http://ppa.launchpad.net/webupd8team/java/ubuntu precise main" | sudo tee -a /etc/apt/sources.list
+sudo apt-key adv --keyserver hkp://keyserver.ubuntu.com:80 --recv-keys EEA14886
+
+# install oracle jdk
+sudo apt-get update
+sudo apt-get install oracle-java8-installer curl wget jq -y
+sudo apt-get install oracle-java8-set-default -y
+
+echo "Setting default java"
+sudo sh -c 'echo JAVA_HOME="/usr/lib/jvm/java-8-oracle" >> /etc/environment'
+source /etc/environment
+
+mkdir -p ~/.install && touch ~/.install/java

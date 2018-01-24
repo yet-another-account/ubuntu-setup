@@ -1,0 +1,18 @@
+#!/bin/bash
+
+[ -e ~/.install/setup-base ] && exit
+
+install/nodejs
+install/python
+install/java
+install/git
+
+echo "#### Installing cryptsetup (needed for LUKS) ####"
+apt-get install cryptsetup -y
+
+
+echo "#### Installing vim ####"
+apt-get install vim
+
+
+mkdir -p ~/.install && touch ~/.install/setup-base

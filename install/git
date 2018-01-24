@@ -1,0 +1,9 @@
+#!/bin/bash
+
+[ -e ~/.install/git ] && exit
+
+echo "######### Installing git #########"
+
+sudo apt-get install git git-gui -y
+
+mkdir -p ~/.install && touch ~/.install/git

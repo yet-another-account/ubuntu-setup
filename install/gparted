@@ -1,0 +1,8 @@
+#!/bin/bash
+
+[ -e ~/.install/gparted ] && exit
+
+echo "#### Installing GParted ####"
+sudo apt-get install gparted -y
+
+mkdir -p ~/.install && touch ~/.install/gparted

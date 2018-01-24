@@ -1,0 +1,11 @@
+#!/bin/bash
+
+[ -e ~/.install/discord ] && exit
+
+echo "######### Installing discord #########"
+wget -O discord.deb "https://discordapp.com/api/download?platform=linux&format=deb"
+sudo dpkg -i discord.deb
+sudo apt-get -f install
+rm discord.deb
+
+mkdir -p ~/.install && touch ~/.install/discord

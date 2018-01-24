@@ -1,0 +1,9 @@
+#!/bin/bash
+
+[ -e ~/.install/chromium ] && exit
+
+echo "######### Installing chromium #########"
+
+sudo apt-get install chromium-browser -y
+
+mkdir -p ~/.install && touch ~/.install/chromium
