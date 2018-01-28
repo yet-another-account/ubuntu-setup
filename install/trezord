@@ -18,6 +18,17 @@ wget https://wallet.trezor.io/data/bridge/1.2.1/trezor-bridge_1.2.1_amd64.deb
 sudo dpkg -i trezor-bridge_1.2.1_amd64.deb
 rm trezor-bridge_1.2.1_amd64.deb
 
-sudo dpkg -i $PWD/../deb/trezor-udev_1_all.deb
+# write udev
+cat | sudo tee /etc/udev/rules.d/51-trezor.rules << EOF
+# TREZOR
+SUBSYSTEM=="usb", ATTR{idVendor}=="534c", ATTR{idProduct}=="0001", MODE="0660", GROUP="plugdev", TAG+="uaccess", TAG+="udev-acl", SYMLINK+="trezor%n"
+KERNEL=="hidraw*", ATTRS{idVendor}=="534c", ATTRS{idProduct}=="0001",  MODE="0660", GROUP="plugdev", TAG+="uaccess", TAG+="udev-acl"
+
+# TREZOR v2
+SUBSYSTEM=="usb", ATTR{idVendor}=="1209", ATTR{idProduct}=="53c0", MODE="0660", GROUP="plugdev", TAG+="uaccess", TAG+="udev-acl", SYMLINK+="trezor%n"
+SUBSYSTEM=="usb", ATTR{idVendor}=="1209", ATTR{idProduct}=="53c1", MODE="0660", GROUP="plugdev", TAG+="uaccess", TAG+="udev-acl", SYMLINK+="trezor%n"
+KERNEL=="hidraw*", ATTRS{idVendor}=="1209", ATTRS{idProduct}=="53c0",  MODE="0660", GROUP="plugdev", TAG+="uaccess", TAG+="udev-acl"
+KERNEL=="hidraw*", ATTRS{idVendor}=="1209", ATTRS{idProduct}=="53c1", MODE="0660", GROUP="plugdev", TAG+="uaccess", TAG+="udev-acl"
+EOF
 
 mkdir -p ~/.install && touch ~/.install/trezord
