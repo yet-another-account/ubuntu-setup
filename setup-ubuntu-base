@@ -1,5 +1,11 @@
 #!/bin/bash
 
+sudo echo "Installing..." || exit 1
+
+sudo apt-get update
+sudo apt-get upgrade -y
+sudo apt-get install wget curl -y
+
 [ -e ~/.install/setup-base ] && exit
 
 install/nodejs
@@ -8,11 +14,11 @@ install/java
 install/git
 
 echo "#### Installing cryptsetup (needed for LUKS) ####"
-apt-get install cryptsetup -y
+sudo apt-get install cryptsetup -y
 
 
 echo "#### Installing vim ####"
-apt-get install vim
+sudo apt-get install vim -y
 
 
 mkdir -p ~/.install && touch ~/.install/setup-base

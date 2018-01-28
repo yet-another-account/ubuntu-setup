@@ -1,0 +1,14 @@
+#!/bin/bash
+
+[ -e ~/.install/nemo ] && exit
+
+echo "######### Installing Nemo & setting as default #########"
+
+sudo apt-get install nemo -y
+
+gsettings set org.gnome.desktop.background show-desktop-icons false
+gsettings set org.nemo.desktop show-desktop-icons true
+
+xdg-mime default nemo.desktop inode/directory application/x-gnome-saved-search
+
+mkdir -p ~/.install && touch ~/.install/nemo

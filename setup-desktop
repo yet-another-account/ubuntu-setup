@@ -12,6 +12,9 @@ install/gparted
 install/chromium
 install/qbittorrent
 install/duplicity
+install/keepassx
+
+install/nemo
 
 install/trezord
 
@@ -20,4 +23,4 @@ echo "#### Removing unity-webapps-common ####"
 sudo apt-get remove unity-webapps-common -y
 
 echo "#### Installing MySQL Workbench ####"
-apt-get install mysql-workbench -y
+sudo apt-get install mysql-workbench -y

@@ -8,7 +8,7 @@ sudo dpkg -i atom.deb
 rm atom.deb
 
 sudo apt-get --fix-broken install -y
-sudo apt-get update && sudo apt-get upgrade
+sudo apt-get update && sudo apt-get upgrade -y
 sudo dpkg --configure -a
 sudo apt-get install -f
 

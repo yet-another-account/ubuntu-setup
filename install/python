@@ -4,15 +4,15 @@
 
 echo "######### Installing python #########"
 
-sudo apt-get install -y python-software-properties build-essential python-pip python3-pip
+sudo apt-get install -y software-properties-common build-essential python-pip python3-pip || exit 1
 
-pip install -U pip
-pip3 install -U pip
+pip install -U pip || exit 1
+pip3 install -U pip || exit 1
 
-pip install virtualenv
-pip3 install virtualenv
+pip install virtualenv || exit 1
+pip3 install virtualenv || exit 1
 
 # needed for matplotlib
-apt-get install libpng-dev libfreetype6-dev -y
+apt-get install libpng-dev libfreetype6-dev -y || exit 1
 
 mkdir -p ~/.install && touch ~/.install/python
