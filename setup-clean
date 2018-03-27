@@ -1,7 +1,5 @@
 #!/bin/bash
 
-cd ~
-
 ./setup-ubuntu-base
 
 sudo apt-get purge -y rhythmbox
