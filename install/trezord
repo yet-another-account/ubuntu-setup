@@ -8,7 +8,7 @@ echo "######### Installing trezord #########"
 
 sudo apt-get install libudev-dev libusb-1.0-0-dev libfox-1.6-dev -y
 
-pip3 install trezor --force-reinstall --upgrade
+pip3 install trezor --force-reinstall --upgrade --user
 
 wget http://security.ubuntu.com/ubuntu/pool/universe/libm/libmicrohttpd/libmicrohttpd10_0.9.44+dfsg-1ubuntu2_amd64.deb
 sudo dpkg -i libmicrohttpd10_0.9.44+dfsg-1ubuntu2_amd64.deb

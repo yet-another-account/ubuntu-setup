@@ -9,8 +9,8 @@ sudo apt-get install -y software-properties-common build-essential python-pip py
 pip install -U pip || exit 1
 pip3 install -U pip || exit 1
 
-pip install virtualenv || exit 1
-pip3 install virtualenv || exit 1
+pip install virtualenv --user || exit 1
+pip3 install virtualenv --user || exit 1
 
 # needed for matplotlib
 apt-get install libpng-dev libfreetype6-dev -y || exit 1
