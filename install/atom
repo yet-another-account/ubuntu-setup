@@ -16,9 +16,9 @@ sudo dpkg -i atom.deb
 
 echo "######### Installing atom package dependencies #########"
 
-pip install autopep8
+pip install autopep8 --user
 
-pip install python-language-server
-pip install pyls-isort
+pip install python-language-server --user
+pip install pyls-isort --user
 
 mkdir -p ~/.install && touch ~/.install/atom
