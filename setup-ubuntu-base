@@ -8,10 +8,14 @@ sudo apt-get install wget curl -y
 
 [ -e ~/.install/setup-base ] && exit
 
-install/nodejs
-install/python
-install/java
-install/git
+install() {
+install/$1 | while read line; do echo "[$1] $line"; done
+}
+
+install nodejs
+install python
+install java
+install git
 
 echo "#### Installing cryptsetup (needed for LUKS) ####"
 sudo apt-get install cryptsetup -y
