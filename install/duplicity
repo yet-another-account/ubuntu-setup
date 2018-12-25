@@ -4,8 +4,8 @@
 
 echo "#### Installing duplicity ####"
 
-apt-get install -y duplicity
-apt-get install --reinstall python-gi -y
-apt-get install python3-pyside -y
+sudo apt-get install -y duplicity
+sudo apt-get install --reinstall python-gi -y
+sudo apt-get install python3-pyside -y
 
 mkdir -p ~/.install && touch ~/.install/duplicity
