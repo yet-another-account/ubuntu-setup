@@ -3,22 +3,27 @@
 ./setup-ubuntu-base
 
 
-install/docker
+install() {
+install/$1 | while read line; do echo "[$1] $line"; done
+}
 
-install/atom
-install/discord
-install/electrum
-install/gparted
-install/chromium
-install/qbittorrent
-install/duplicity
+
+install docker
+
+install atom
+install discord
+install electrum
+install gparted
+install chromium
+install qbittorrent
+install duplicity
 #install/keepassx
 sudo apt install keepassxc
-install/sqlitebrowser
+install sqlitebrowser
 
-install/nemo
+install nemo
 
-install/trezord
+install trezord
 
 
 echo "#### Removing unity-webapps-common ####"
