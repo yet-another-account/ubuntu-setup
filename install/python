@@ -6,8 +6,8 @@ echo "######### Installing python #########"
 
 sudo apt-get install -y software-properties-common build-essential python-pip python3-pip || exit 1
 
-pip install -U pip || exit 1
-pip3 install -U pip || exit 1
+#pip install -U pip || exit 1
+#pip3 install -U pip || exit 1
 
 pip install virtualenv --user || exit 1
 pip3 install virtualenv --user || exit 1
