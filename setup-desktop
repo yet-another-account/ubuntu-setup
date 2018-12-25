@@ -14,6 +14,7 @@ install/qbittorrent
 install/duplicity
 #install/keepassx
 sudo apt install keepassxc
+install/sqlitebrowser
 
 install/nemo
 
