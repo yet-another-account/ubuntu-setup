@@ -12,7 +12,8 @@ install/gparted
 install/chromium
 install/qbittorrent
 install/duplicity
-install/keepassx
+#install/keepassx
+sudo apt install keepassxc
 
 install/nemo
 
