@@ -11,6 +11,7 @@ pip3 install -U pip || exit 1
 
 pip install virtualenv --user || exit 1
 pip3 install virtualenv --user || exit 1
+pip3 install --user pipenv || exit 1
 
 # needed for matplotlib
 apt-get install libpng-dev libfreetype6-dev python3-tk -y || exit 1
