@@ -4,7 +4,7 @@
 
 
 install() {
-install/$1 | while read line; do echo "[$1] $line"; done
+    install/$1 | while read line; do echo "[$1] $line"; done
 }
 
 
@@ -26,6 +26,7 @@ install nemo
 
 install trezord
 
+bash mk_bindings.sh
 
 echo "#### Removing unity-webapps-common ####"
 sudo apt-get remove unity-webapps-common -y
