@@ -26,6 +26,9 @@ install nemo
 
 install trezord
 
+# printscreen keybind deps
+sudo apt-get install exiftool xclip -y
+
 bash mk_bindings.sh
 
 echo "#### Removing unity-webapps-common ####"
