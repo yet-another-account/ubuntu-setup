@@ -19,6 +19,7 @@ install qbittorrent
 install duplicity
 #install/keepassx
 sudo apt-get install keepassxc -y
+sudo snap install gimp
 install sqlitebrowser
 
 install nemo
