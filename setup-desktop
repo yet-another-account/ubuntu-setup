@@ -7,9 +7,9 @@ install() {
     install/$1 | while read line; do echo "[$1] $line"; done
 }
 
+# install compartamentalized stuff
 
 install docker
-
 install atom
 install discord
 install electrum
@@ -17,19 +17,25 @@ install gparted
 install chromium
 install qbittorrent
 install duplicity
-#install/keepassx
-sudo apt-get install keepassxc -y
-sudo snap install gimp
 install sqlitebrowser
-
 install nemo
-
 install trezord
+#install keepassx
+
+# install random apt stuff
+sudo apt-get install keepassxc -y
+sudo apt-get install neofetch -y
+sudo apt-get install simplescreenrecorder -y
+
+# install snaps
+sudo snap install gimp
+
 
 # printscreen keybind deps
 sudo apt-get install exiftool xclip -y
 
 bash mk_bindings.sh
+bash mk_startup.sh
 
 echo "#### Removing unity-webapps-common ####"
 sudo apt-get remove unity-webapps-common -y
