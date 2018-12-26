@@ -1,0 +1,3 @@
+#!/bin/bash
+
+bash -c 'PFILE="$HOME/Pictures/Screenshot-$(date +%%F_%%H-%%M-%%S).png"; gnome-screenshot -a -f "$PFILE"; xclip -selection clipboard -t image/png < $PFILE; exiftool -all= $PFILE; [ -e $PFILE ] && gimp $PFILE; xclip -selection clipboard -t image/png < $PFILE'
