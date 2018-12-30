@@ -42,3 +42,7 @@ sudo apt-get remove unity-webapps-common -y
 
 echo "#### Installing MySQL Workbench ####"
 sudo apt-get install mysql-workbench -y
+
+echo "Patching nosplash"
+sudo patch /etc/default/grub -i nosplash.patch
+sudo update-grub
