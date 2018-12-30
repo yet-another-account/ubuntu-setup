@@ -1,5 +1,17 @@
 #!/bin/bash
 
+prepend() {
+    while read line; do echo "[$1] $line"; done
+}
+
+install() {
+    install/$1 | prepend $1
+}
+
+install-apt() {
+    sudo apt-get install $1 -y | prepend "apt:$1"
+}
+
 sudo echo "Installing..." || exit 1
 
 sudo apt-get update
@@ -8,21 +20,17 @@ sudo apt-get install wget curl -y
 
 [ -e ~/.install/setup-base ] && exit
 
-install() {
-install/$1 | while read line; do echo "[$1] $line"; done
-}
-
 install nodejs
 install python
 install java
 install git
 
 echo "#### Installing cryptsetup (needed for LUKS) ####"
-sudo apt-get install cryptsetup -y
+install-apt cryptsetup
 
 
 echo "#### Installing vim ####"
-sudo apt-get install vim -y
+install-apt vim
 
 
 mkdir -p ~/.install && touch ~/.install/setup-base

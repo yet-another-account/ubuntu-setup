@@ -2,11 +2,17 @@
 
 ./setup-ubuntu-base
 
-
-install() {
-    install/$1 | while read line; do echo "[$1] $line"; done
+prepend() {
+    while read line; do echo "[$1] $line"; done
 }
 
+install() {
+    install/$1 | prepend $1
+}
+
+install-apt() {
+    sudo apt-get install $1 -y | prepend "apt:$1"
+}
 # install compartamentalized stuff
 
 install docker
@@ -20,34 +26,38 @@ install duplicity
 install sqlitebrowser
 install nemo
 install trezord
+install vscode
 #install keepassx
 
 # install random apt stuff
-sudo apt-get install keepassxc -y
-sudo apt-get install neofetch -y
-sudo apt-get install simplescreenrecorder -y
+install-apt keepassxc
+install-apt neofetch
+install-apt simplescreenrecorder
+
+echo "#### Installing MySQL Workbench ####"
+install-apt mysql-workbench
 
 # install snaps
 sudo snap install gimp
 
+(
+    # printscreen keybind deps
+    sudo apt-get install exiftool xclip -y
+    bash mk_bindings.sh
+) | prepend 'keybinds'
 
-# printscreen keybind deps
-sudo apt-get install exiftool xclip -y
-
-bash mk_bindings.sh
-bash mk_startup.sh
+bash mk_startup.sh | prepend 'startup'
 
 # install zh & ja
-sudo apt-get install ibus-sunpinyin -y
-sudo apt-get install ibus-anthy -y
-sudo apt-get install ibus-clutter ibus-gtk ibus-gtk3 ibus-qt4 -y
-ibus restart
+(
+    sudo apt-get install ibus-sunpinyin -y
+    sudo apt-get install ibus-anthy -y
+    sudo apt-get install ibus-clutter ibus-gtk ibus-gtk3 ibus-qt4 -y
+    ibus restart
+) | prepend 'lang'
 
 echo "#### Removing unity-webapps-common ####"
 sudo apt-get remove unity-webapps-common -y
-
-echo "#### Installing MySQL Workbench ####"
-sudo apt-get install mysql-workbench -y
 
 echo "Patching nosplash"
 sudo patch /etc/default/grub -i nosplash.patch
