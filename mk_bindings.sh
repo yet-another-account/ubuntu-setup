@@ -17,6 +17,11 @@ function createShortcut() {
 cp bin/screenshot $HOME
 cp bin/screenshot_edit $HOME
 
+bpath="/org/gnome/settings-daemon/plugins/media-keys"
+
+dconf write "$bpath/screenshot" '""'
+dconf write "$bpath/area-screenshot" '""'
+
 createShortcut 0 'screenshot' "$HOME/screenshot" 'Print'
 createShortcut 1 'screenshot+edit' "$HOME/screenshot_edit" '<Primary>Print'
 ct=2
