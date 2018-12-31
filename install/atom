@@ -5,8 +5,7 @@
 echo "######### Installing atom #########"
 wget https://atom.io/download/deb -O atom.deb
 sudo dpkg -i atom.deb
-rm atom.deb
-
+echo "Expected error--don't panic!"
 sudo apt-get --fix-broken install -y
 sudo apt-get update && sudo apt-get upgrade -y
 sudo dpkg --configure -a
@@ -14,6 +13,7 @@ sudo apt-get install -f
 
 sudo dpkg -i atom.deb
 
+rm atom.deb
 echo "######### Installing atom package dependencies #########"
 
 pip install autopep8 --user

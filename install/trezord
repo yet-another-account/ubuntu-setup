@@ -2,11 +2,11 @@
 
 [ -e ~/.install/trezord ] && exit
 
-./python
+#./python
 
 echo "######### Installing trezord #########"
 
-sudo apt-get install libudev-dev libusb-1.0-0-dev libfox-1.6-dev -y
+sudo apt-get install libudev-dev libusb-1.0-0-dev libfox-1.6-dev python3-dev -y
 
 pip3 install trezor --force-reinstall --upgrade --user
 

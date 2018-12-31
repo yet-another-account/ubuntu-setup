@@ -60,5 +60,5 @@ echo "#### Removing unity-webapps-common ####"
 sudo apt-get remove unity-webapps-common -y
 
 echo "Patching nosplash"
-sudo patch /etc/default/grub -i nosplash.patch
+sudo patch /etc/default/grub -i patches/nosplash.patch
 sudo update-grub
