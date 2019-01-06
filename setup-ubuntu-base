@@ -32,6 +32,7 @@ install-apt cryptsetup
 echo "#### Installing vim ####"
 install-apt vim
 
+install-apt htop
 install-apt iotop
 
 mkdir -p ~/.install && touch ~/.install/setup-base
