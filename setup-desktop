@@ -27,6 +27,7 @@ install sqlitebrowser
 install nemo
 install trezord
 install vscode
+install anki
 #install keepassx
 
 # install random apt stuff
