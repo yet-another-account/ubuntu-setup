@@ -64,6 +64,9 @@ bash mk_startup.sh | prepend 'startup'
 echo "#### Removing unity-webapps-common ####"
 sudo apt-get remove unity-webapps-common -y
 
+echo "#### Setting favorite apps ####"
+dconf write "/org/gnome/shell/favorite-apps" "['firefox.desktop', 'nemo.desktop', 'org.gnome.Terminal.desktop', 'atom.desktop']"
+
 echo "Patching nosplash"
 sudo patch /etc/default/grub -i patches/nosplash.patchpatch ~/.config/keepassxc/keepassxc.ini keepass.patch
 sudo update-grub
