@@ -35,6 +35,10 @@ install-apt keepassxc
 install-apt neofetch
 install-apt simplescreenrecorder
 
+# set global shortcut to ctrl+alt+a
+echo "Patching keepassxc config"
+patch ~/.config/keepassxc/keepassxc.ini patches/keepass.patch
+
 echo "#### Installing MySQL Workbench ####"
 install-apt mysql-workbench
 
@@ -61,5 +65,5 @@ echo "#### Removing unity-webapps-common ####"
 sudo apt-get remove unity-webapps-common -y
 
 echo "Patching nosplash"
-sudo patch /etc/default/grub -i patches/nosplash.patch
+sudo patch /etc/default/grub -i patches/nosplash.patchpatch ~/.config/keepassxc/keepassxc.ini keepass.patch
 sudo update-grub
