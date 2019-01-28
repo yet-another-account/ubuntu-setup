@@ -4,4 +4,4 @@ alias apti='sudo apt install'
 alias pipi='pip install --user'
 
 alias gg='git gui'
-alias grm='git remote set-url master'
+alias gro='git remote set-url origin'
