@@ -20,4 +20,10 @@ pip3 install --user pipenv || exit 1
 # needed for matplotlib
 sudo apt-get install libpng-dev libfreetype6-dev python3-tk -y || exit 1
 
+# common pkgs
+python3 -m pip install autopep8 jedi matplotlib pillow pyuserinput --user
+
+# ml pkgs
+python3 -m pip install jupyter tensorflow torch torchvision gym pandas scipy --user
+
 mkdir -p ~/.install && touch ~/.install/python
