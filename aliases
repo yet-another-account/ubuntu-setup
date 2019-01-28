@@ -1,0 +1,7 @@
+alias jn='jupyter notebook'
+
+alias apti='sudo apt install'
+alias pipi='pip install --user'
+
+alias gg='git gui'
+alias grm='git remote set-url master'

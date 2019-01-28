@@ -63,3 +63,7 @@ sudo apt-get remove unity-webapps-common -y
 echo "Patching nosplash"
 sudo patch /etc/default/grub -i patches/nosplash.patch
 sudo update-grub
+
+echo "Installing aliases"
+cp aliases ~/aliases
+echo ". ~/aliases" >> ~/.bashrc
