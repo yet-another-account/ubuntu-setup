@@ -20,4 +20,9 @@ pip3 install --user pipenv || exit 1
 # needed for matplotlib
 sudo apt-get install libpng-dev libfreetype6-dev python3-tk -y || exit 1
 
+# python packages (optional)
+pip3 install torch --user
+pip3 install matplotlib --user
+pip3 install jupyter --user
+
 mkdir -p ~/.install && touch ~/.install/python
