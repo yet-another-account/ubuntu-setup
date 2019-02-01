@@ -44,6 +44,7 @@ install-apt mysql-workbench
 
 # install snaps
 sudo snap install gimp
+sudo snap install --classic eclipse
 
 (
     # printscreen keybind deps
@@ -72,3 +73,7 @@ echo 'PATH=$PATH:~/.local/bin' >> ~/.bashrc
 echo "Patching nosplash"
 sudo patch /etc/default/grub -i patches/nosplash.patchpatch ~/.config/keepassxc/keepassxc.ini keepass.patch
 sudo update-grub
+
+echo "Installing aliases"
+cp aliases ~/aliases
+echo ". ~/aliases" >> ~/.bashrc

@@ -1,0 +1,11 @@
+alias jn='jupyter notebook'
+
+alias apti='sudo apt install'
+alias pipi='pip install --user'
+
+alias g='git'
+alias gg='git gui'
+alias gro='git remote set-url origin'
+
+alias p='python3'
+alias pp='python2'
