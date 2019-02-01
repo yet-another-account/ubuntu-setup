@@ -1,0 +1,49 @@
+#!/bin/bash
+
+sudo apt-get update
+sudo apt-get install -y libnuma-dev
+sudo apt-get install -y libopenblas-dev
+
+# add repo
+wget -qO - http://repo.radeon.com/rocm/apt/debian/rocm.gpg.key | sudo apt-key add -
+echo 'deb [arch=amd64] http://repo.radeon.com/rocm/apt/debian/ xenial main' | sudo tee /etc/apt/sources.list.d/rocm.list
+
+# install rocm
+sudo apt update
+sudo apt install -y rocm-dkms rocm-utils rocm-libs rocm-cmake miopen-hip miopengemm rocfft rocblas rocm-profiler cxlactivitylogger rocsparse hipsparse rocrand hip-thrust mkl-dnn doxygen
+
+
+### BEGIN: CODE FROM https://github.com/pytorch/pytorch/blob/75a2d8e2de4a73e16c3ea22f781673ea3e15a1f9/docker/caffe2/jenkins/common/install_rocm.sh
+
+# HIP has a bug that drops DEBUG symbols in generated MakeFiles.
+# https://github.com/ROCm-Developer-Tools/HIP/pull/588
+if [[ -f /opt/rocm/hip/cmake/FindHIP.cmake ]]; then
+    sudo sed -i 's/set(_hip_build_configuration "${CMAKE_BUILD_TYPE}")/string(TOUPPER _hip_build_configuration "${CMAKE_BUILD_TYPE}")/' /opt/rocm/hip/cmake/FindHIP.cmake
+fi
+
+# there is a case-sensitivity issue in the cmake files of some ROCm libraries. Fix this here until the fix is released
+sudo sed -i 's/find_dependency(hip)/find_dependency(HIP)/g' /opt/rocm/rocsparse/lib/cmake/rocsparse/rocsparse-config.cmake
+sudo sed -i 's/find_dependency(hip)/find_dependency(HIP)/g' /opt/rocm/rocfft/lib/cmake/rocfft/rocfft-config.cmake
+sudo sed -i 's/find_dependency(hip)/find_dependency(HIP)/g' /opt/rocm/miopen/lib/cmake/miopen/miopen-config.cmake
+sudo sed -i 's/find_dependency(hip)/find_dependency(HIP)/g' /opt/rocm/rocblas/lib/cmake/rocblas/rocblas-config.cmake
+
+### END
+
+
+# add usergroup
+sudo usermod -a -G video $LOGNAME
+echo 'ADD_EXTRA_GROUPS=1' | sudo tee -a /etc/adduser.conf
+echo 'EXTRA_GROUPS=video' | sudo tee -a /etc/adduser.conf
+
+# add to path
+echo 'export PATH=$PATH:/opt/rocm/bin:/opt/rocm/profiler/bin:/opt/rocm/opencl/bin/x86_64' | sudo tee -a /etc/profile.d/rocm.sh
+source /etc/profile.d/rocm.sh
+
+git clone --recursive https://github.com/pytorch/pytorch/
+cd pytorch
+
+# patch stuff
+python3 tools/amd_build/build_amd.py
+
+# install!
+USE_ROCM=1 python3 setup.py install
