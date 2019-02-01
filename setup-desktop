@@ -44,6 +44,7 @@ install-apt mysql-workbench
 
 # install snaps
 sudo snap install gimp
+sudo snap install --classic eclipse
 
 (
     # printscreen keybind deps
