@@ -39,6 +39,7 @@ echo 'EXTRA_GROUPS=video' | sudo tee -a /etc/adduser.conf
 echo 'export PATH=$PATH:/opt/rocm/bin:/opt/rocm/profiler/bin:/opt/rocm/opencl/bin/x86_64' | sudo tee -a /etc/profile.d/rocm.sh
 source /etc/profile.d/rocm.sh
 
+pip uninstall -y pytorch
 git clone --recursive https://github.com/pytorch/pytorch/
 cd pytorch
 
@@ -47,3 +48,5 @@ python3 tools/amd_build/build_amd.py
 
 # install!
 USE_ROCM=1 python3 setup.py install
+
+cd ..
