@@ -20,6 +20,9 @@ pip3 install --user pipenv || exit 1
 # needed for matplotlib
 sudo apt-get install libpng-dev libfreetype6-dev python3-tk -y || exit 1
 
+# lmxl
+sudo apt-get install libxml2-dev libxslt-dev
+
 # common pkgs
 python3 -m pip install autopep8 jedi matplotlib pillow pyuserinput --user
 
