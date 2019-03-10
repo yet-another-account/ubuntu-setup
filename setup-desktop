@@ -28,6 +28,7 @@ install nemo
 install trezord
 install vscode
 install anki
+install sacred
 #install keepassx
 
 # install random apt stuff
