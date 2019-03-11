@@ -1,0 +1,23 @@
+sudo add-apt-repository ppa:graphics-drivers -y
+sudo apt-get update
+
+sudo apt-get install nvidia-driver-418 nvidia-utils-418 nvidia-settings -y
+wget -N https://developer.nvidia.com/compute/cuda/10.1/Prod/local_installers/cuda_10.1.105_418.39_linux.run
+wget -N http://developer.download.nvidia.com/compute/machine-learning/repos/ubuntu1804/x86_64/libcudnn7_7.5.0.56-1+cuda10.1_amd64.deb
+sudo ./cuda_10.1.105_418.39_linux.run --override --silent --toolkit --no-opengl-libs
+sudo dpkg -i libcudnn7_7.5.0.56-1+cuda10.1_amd64.deb
+sudo apt-get install libcupti-dev -y
+
+sudo tee /usr/share/X11/xorg.conf.d/10-intel.conf<<EOL
+Section "Device"
+        Identifier "Intel GPU"
+        Driver "modesetting"
+        BusID  "PCI:0:2:0"
+EndSection
+EOL
+
+sudo mkdir -p /usr/share/X11/xorg.conf.disabled/
+sudo mv /usr/share/X11/xorg.conf.d/10-nvidia.conf /usr/share/X11/xorg.conf.disabled/
+sudo prime-select intel
+
+echo "restart to complete CUDA installation"
