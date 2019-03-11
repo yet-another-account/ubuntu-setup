@@ -18,6 +18,5 @@ EOL
 
 sudo mkdir -p /usr/share/X11/xorg.conf.disabled/
 sudo mv /usr/share/X11/xorg.conf.d/10-nvidia.conf /usr/share/X11/xorg.conf.disabled/
-sudo prime-select intel
 
 echo "restart to complete CUDA installation"
