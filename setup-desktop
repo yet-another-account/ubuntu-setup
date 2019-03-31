@@ -46,6 +46,7 @@ install-apt mysql-workbench
 
 # install snaps
 sudo snap install gimp
+sudo snap install tldr
 sudo snap install --classic eclipse
 
 (
