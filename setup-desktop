@@ -49,6 +49,10 @@ sudo snap install gimp
 sudo snap install tldr
 sudo snap install --classic eclipse
 
+# install flatpak
+install-apt flatpak
+flatpak --user remote-add --if-not-exists flathub https://flathub.org/repo/flathub.flatpakrepo
+
 (
     # printscreen keybind deps
     sudo apt-get install exiftool xclip -y
