@@ -27,6 +27,7 @@ fi
 
 wget -N ${cuda_url} -O cuda.run
 wget -N ${cudnn_url} -O libcudnn.deb
+chmod +x cuda.run
 sudo ./cuda.run --override --silent --toolkit --no-opengl-libs
 sudo dpkg -i libcudnn.deb
 sudo apt-get install libcupti-dev -y
