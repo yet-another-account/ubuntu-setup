@@ -78,3 +78,7 @@ sudo update-grub
 echo "Installing aliases"
 cp aliases ~/aliases
 echo ". ~/aliases" >> ~/.bashrc
+
+echo "Installing env"
+cp env ~/env
+echo ". ~/env" >> ~/.bashrc

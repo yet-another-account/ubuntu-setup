@@ -1,7 +1,11 @@
 #!/bin/bash
 
+wget https://repo.anaconda.com/archive/Anaconda3-2018.12-Linux-x86_64.sh
+
+bash Anaconda3-2018.12-Linux-x86_64.sh -b
+
 sudo apt-get update
-sudo apt-get install -y libnuma-dev
+sudo apt-get install -y libnuma-dev libpciaccess-dev libncurses-dev
 sudo apt-get install -y libopenblas-dev
 
 # add repo
@@ -10,8 +14,75 @@ echo 'deb [arch=amd64] http://repo.radeon.com/rocm/apt/debian/ xenial main' | su
 
 # install rocm
 sudo apt update
-sudo apt install -y rocm-dkms rocm-utils rocm-libs rocm-cmake miopen-hip miopengemm rocfft rocblas rocm-profiler cxlactivitylogger rocsparse hipsparse rocrand hip-thrust mkl-dnn doxygen
+sudo apt install -y rocm-dkms rocm-utils rocm-libs rocm-cmake miopen-hip miopengemm rocfft rocblas rocm-profiler cxlactivitylogger rocsparse hipsparse rocrand hip-thrust doxygen
 
+# from https://github.com/ROCmSoftwarePlatform/pytorch/wiki/Dockerfile
+sudo apt-get update && DEBIAN_FRONTEND=noninteractive sudo apt-get install -y --no-install-recommends curl && \
+  curl -sL http://repo.radeon.com/rocm/apt/debian/rocm.gpg.key | sudo apt-key add - && \
+  sudo sh -c 'echo deb [arch=amd64] http://repo.radeon.com/rocm/apt/debian/ xenial main > /etc/apt/sources.list.d/rocm.list' && \
+  sudo apt-get update && DEBIAN_FRONTEND=noninteractive sudo apt-get install -y --no-install-recommends \
+  sudo \
+  libelf1 \
+  build-essential \
+  bzip2 \
+  ca-certificates \
+  cmake \
+  ssh \
+  apt-utils \
+  pkg-config \
+  g++-multilib \
+  gdb \
+  git \
+  less \
+  libunwind-dev \
+  libfftw3-dev \
+  libelf-dev \
+  libncurses5-dev \
+  libomp-dev \
+  libpthread-stubs0-dev \
+  make \
+  miopen-hip \
+  miopengemm \
+  python3-dev \
+  python3-future \
+  python3-yaml \
+  python3-pip \
+  vim \
+  libssl-dev \
+  libboost-dev \
+  libboost-system-dev \
+  libboost-filesystem-dev \
+  libopenblas-dev \
+  rpm \
+  wget \
+  net-tools \
+  iputils-ping \
+  libnuma-dev \
+  rocm-dev \
+  rocrand \
+  rocblas \
+  rocfft \
+  hipsparse \
+  hip-thrust && \
+  curl -sL https://apt.llvm.org/llvm-snapshot.gpg.key | sudo apt-key add - && \
+  sudo sh -c 'echo deb [arch=amd64] http://apt.llvm.org/xenial/ llvm-toolchain-xenial-7 main > /etc/apt/sources.list.d/llvm7.list' && \
+  sudo sh -c 'echo deb-src http://apt.llvm.org/xenial/ llvm-toolchain-xenial-7 main >> /etc/apt/sources.list.d/llvm7.list' && \
+  sudo apt-get update && DEBIAN_FRONTEND=noninteractive sudo apt-get install -y --no-install-recommends \
+  clang-7
+
+# Install package
+sudo apt-get install -y ccache
+
+# Update symlinks
+sudo /usr/sbin/update-ccache-symlinks
+
+# Prepend ccache into the PATH
+echo 'export PATH="/usr/lib/ccache:$PATH"' | tee -a ~/.bashrc
+
+# Source bashrc to test the new PATH
+source ~/.bashrc && echo $PATH
+
+export HIP_PLATFORM="hcc"
 
 ### BEGIN: CODE FROM https://github.com/pytorch/pytorch/blob/75a2d8e2de4a73e16c3ea22f781673ea3e15a1f9/docker/caffe2/jenkins/common/install_rocm.sh
 
@@ -30,6 +101,30 @@ sudo sed -i 's/find_dependency(hip)/find_dependency(HIP)/g' /opt/rocm/rocblas/li
 ### END
 
 
+### BEGIN: CODE FROM https://github.com/pytorch/pytorch/blob/75a2d8e2de4a73e16c3ea22f781673ea3e15a1f9/docker/caffe2/jenkins/common/install_mkl.sh
+
+# Needs https transport for apt
+sudo apt-get update
+sudo apt-get install -y --no-install-recommends apt-transport-https
+
+# Add Intel MKL repository
+key="https://apt.repos.intel.com/intel-gpg-keys/GPG-PUB-KEY-INTEL-SW-PRODUCTS-2019.PUB"
+curl "${key}" | sudo apt-key add -
+echo 'deb http://apt.repos.intel.com/mkl all main' | \
+  sudo tee /etc/apt/sources.list.d/intel-mkl.list
+sudo apt-get update
+
+# Multiple candidates for intel-mkl-64bit, so have to be specific
+sudo apt-get install -y --no-install-recommends intel-mkl-64bit-2019.1-053
+sudo rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
+
+# Ensure loader can find MKL path
+echo '/opt/intel/mkl/lib/intel64' | sudo tee /etc/ld.so.conf.d/intel-mkl.conf
+sudo ldconfig
+
+### END
+
+
 # add usergroup
 sudo usermod -a -G video $LOGNAME
 echo 'ADD_EXTRA_GROUPS=1' | sudo tee -a /etc/adduser.conf
@@ -39,14 +134,58 @@ echo 'EXTRA_GROUPS=video' | sudo tee -a /etc/adduser.conf
 echo 'export PATH=$PATH:/opt/rocm/bin:/opt/rocm/profiler/bin:/opt/rocm/opencl/bin/x86_64' | sudo tee -a /etc/profile.d/rocm.sh
 source /etc/profile.d/rocm.sh
 
-pip uninstall -y torch
-git clone --recursive https://github.com/pytorch/pytorch/
-cd pytorch
+### TF
+
+#pip3 install tensorflow-rocm
+
+# downgrade rocm
+cd ~ && mkdir rocm1.9.2-opencl && cd rocm1.9.2-opencl &&
+wget https://www.dropbox.com/s/rtwe1zrpuphbyqm/rocm-opencl-1.2.0-2018111340_amd64.deb &&
+wget https://www.dropbox.com/s/6gp2g5zju66i4e9/rocm-opencl-dev-1.2.0-2018111340_amd64.deb &&
+sudo dpkg -i rocm-opencl*.deb && rm -rf ~/.cache
+
+export HCC_HOME=/opt/rocm/hcc
+export HIP_PATH=/opt/rocm/hip
+export PATH=$HCC_HOME/bin:$HIP_PATH/bin:$PATH
+
+sudo apt-get update && sudo apt-get install -y \
+    python3-numpy \
+    python3-dev \
+    python3-wheel \
+    python3-mock \
+    python3-future \
+    python3-pip \
+    python3-yaml \
+    python3-setuptools && \
+    sudo apt-get clean && \
+    sudo rm -rf /var/lib/apt/lists/*
+
+
+# install bazel
+sudo apt-get install pkg-config zip g++ zlib1g-dev unzip python -y
+wget https://github.com/bazelbuild/bazel/releases/download/0.15.0/bazel-0.15.0-installer-linux-x86_64.sh
+chmod +x bazel-0.15.0-installer-linux-x86_64.sh
+./bazel-0.15.0-installer-linux-x86_64.sh --user
+
+# Clone it
+git clone -b r1.12-rocm https://github.com/ROCmSoftwarePlatform/tensorflow-upstream.git
+
+# Python 3: Build and install TensorFlow ROCm port pip3 package
+cd tensorflow-upstream && ./build_rocm_python3
+
+
+#pip3 uninstall -y torch
+#git clone --recursive https://github.com/pytorch/pytorch/
+#cd pytorch
 
 # patch stuff
-python3 tools/amd_build/build_amd.py
+#python3 tools/amd_build/build_amd.py
 
 # install!
-USE_ROCM=1 python3 setup.py install
+# remember: change target to your gpu!
+#export HCC_AMDGPU_TARGET=gfx803
+#USE_ROCM=1 MAX_JOBS=8 python3 setup.py install --user
 
-cd ..
+#cd ..
+
+#pip3 install -y torchvision
