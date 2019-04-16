@@ -21,7 +21,7 @@ if [[ "$distro" == "Debian" ]]; then
 
     sudo apt-get update
     sudo apt-get install linux-headers-$(uname -r|sed 's/[^-]*-[^-]*-//') -y
-    sudo apt-get install -t stretch-backports nvidia-driver -y
+    sudo apt-get install -t stretch-backports nvidia-driver nvidia-smi -y
 fi
 
 
