@@ -84,3 +84,6 @@ sudo update-grub
 echo "Installing aliases"
 cp aliases ~/aliases
 echo ". ~/aliases" >> ~/.bashrc
+
+sudo apt-get install pciutils -y
+lspci | grep VGA | grep -qi NVIDIA && ./setup-cuda
