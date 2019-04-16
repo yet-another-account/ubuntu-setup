@@ -21,7 +21,7 @@ pip3 install --user pipenv || exit 1
 sudo apt-get install libpng-dev libfreetype6-dev python3-tk -y || exit 1
 
 # lmxl
-sudo apt-get install libxml2-dev libxslt-dev
+sudo apt-get install libxml2-dev libxslt-dev -y
 
 # common pkgs
 python3 -m pip install autopep8 jedi matplotlib pillow pyuserinput --user
