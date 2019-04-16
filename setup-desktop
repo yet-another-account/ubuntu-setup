@@ -85,5 +85,12 @@ echo "Installing aliases"
 cp aliases ~/aliases
 echo ". ~/aliases" >> ~/.bashrc
 
+echo "Adding ssh timeout config"
+tee ~/.ssh/config<<EOL
+Host *
+    ServerAliveInterval 300
+    ServerAliveCountMax 2
+EOL
+
 sudo apt-get install pciutils -y
 lspci | grep VGA | grep -qi NVIDIA && ./setup-cuda
