@@ -36,6 +36,7 @@ install-apt keepassxc
 install-apt neofetch
 install-apt simplescreenrecorder
 install-apt p7zip
+install-apt cloc
 
 # set global shortcut to ctrl+alt+a
 echo "Patching keepassxc config"
