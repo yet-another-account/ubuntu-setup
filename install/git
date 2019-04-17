@@ -4,7 +4,7 @@
 
 echo "######### Installing git #########"
 
-sudo apt-get install git git-gui gitg -y
+sudo apt-get install git git-gui gitg -y || exit 1
 git config --global core.editor "vim"
 
 mkdir -p ~/.install && touch ~/.install/git
