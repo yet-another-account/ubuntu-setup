@@ -45,7 +45,7 @@ install_base() {
 }
 
 install_desktop() {
-    #!/bin/bash
+    install base
 
     sudo echo "installing base" || exit 1
     ./setup-ubuntu-base || exit 1
@@ -252,6 +252,7 @@ EOL
 }
 
 install_myetherwallet() {
+    install git
     cd ~
     git clone https://github.com/kvhnuke/etherwallet
     cd etherwallet
@@ -296,6 +297,7 @@ install_iotawallet() {
 }
 
 install_electrum() {
+    install python
     sudo apt-get install python3-setuptools python3-pyqt5 -y
     sudo pip3 install https://download.electrum.org/3.3.2/Electrum-3.3.2.tar.gz#egg=electrum[fast]
 }
@@ -306,6 +308,7 @@ install_git() {
 }
 
 install_sacred() {
+    install python
     sudo apt-key adv --keyserver hkp://keyserver.ubuntu.com:80 --recv 2930ADAE8CAF5059EE73BB4B58712A2291FA4AD5
     echo "deb [ arch=amd64,arm64 ] https://repo.mongodb.org/apt/ubuntu xenial/mongodb-org/3.6 multiverse" | sudo tee /etc/apt/sources.list.d/mongodb-org-3.6.list
     sudo apt update
@@ -336,6 +339,7 @@ install_nodejs() {
 }
 
 install_pycharm() {
+    install python
     install umake
     umake ide pycharm
 }
@@ -371,6 +375,7 @@ EOL
 }
 
 install_anki() {
+    install python
     wget https://apps.ankiweb.net/downloads/current/anki-2.1.8-linux-amd64.tar.bz2
     tar xjf anki-2.1.8-linux-amd64.tar.bz2
     cd anki-2.1.8-linux-amd64
