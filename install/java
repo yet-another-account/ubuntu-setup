@@ -10,12 +10,12 @@ echo debconf shared/accepted-oracle-license-v1-1 seen true | sudo debconf-set-se
 
 sudo apt-get install dirmngr -y
 
-sudo add-apt-repository ppa:linuxuprising/java
+sudo add-apt-repository ppa:linuxuprising/java -y 
 
 # install oracle jdk
 sudo apt-get update
-sudo apt-get install oracle-java10-installer curl wget jq -y
-sudo apt-get install oracle-java10-set-default -y
+sudo apt-get install oracle-java11-installer curl wget jq -y
+sudo apt-get install oracle-java11-set-default -y
 
 echo "Setting default java"
 sudo sh -c 'echo JAVA_HOME="/usr/lib/jvm/java-8-oracle" >> /etc/environment'
