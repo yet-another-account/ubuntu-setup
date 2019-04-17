@@ -1,7 +1,6 @@
 #!/bin/bash
 
-sudo echo "installing base" || exit 1
-./setup-ubuntu-base || exit 1
+sudo echo "Installing literally everything..." || exit 1
 
 
 fail() {
@@ -92,18 +91,6 @@ install_desktop() {
     install-apt p7zip
     install-apt cloc
 
-    # set global shortcut to ctrl+alt+a
-    echo "Patching keepassxc config"
-    tee keepass.patch<<EOL
-9,10c9,10
-< GlobalAutoTypeKey=0
-< GlobalAutoTypeModifiers=0
----
-> GlobalAutoTypeKey=65
-> GlobalAutoTypeModifiers=201326592
-EOL
-    patch ~/.config/keepassxc/keepassxc.ini keepass.patch || fail
-    rm keepass.patch
 
     echo "#### Installing MySQL Workbench ####"
     install-apt mysql-workbench
@@ -122,30 +109,6 @@ EOL
         sudo apt-get install exiftool xclip -y || fail
         make_bindings || fail
     ) | prepend 'keybinds'
-
-    # make autostart
-    (
-    mkdir -p ~/.config/autostart/
-    tee ~/.config/autostart/discord.desktop<<EOL
-[Desktop Entry]
-Type=Application
-Exec=discord
-Hidden=false
-X-GNOME-Autostart-enabled=true
-Name=discord
-Comment=discord
-EOL
-    tee ~/.config/autostart/keepassxc.desktop<<EOL
-[Desktop Entry]
-Type=Application
-Exec=keepassxc
-Hidden=false
-NoDisplay=false
-X-GNOME-Autostart-enabled=true
-Name=KeepassXC
-Comment=password manager
-EOL
-    ) || fail
 
     # install zh & ja
     (
@@ -198,6 +161,30 @@ EOL
 Host *
     ServerAliveInterval 300
     ServerAliveCountMax 2
+EOL
+
+    # Keepass config stuff
+    # set global shortcut to ctrl+alt+a
+    echo "Patching keepassxc config"
+tee keepass.patch<<EOL
+9,10c9,10
+< GlobalAutoTypeKey=0
+< GlobalAutoTypeModifiers=0
+---
+> GlobalAutoTypeKey=65
+> GlobalAutoTypeModifiers=201326592
+EOL
+    patch ~/.config/keepassxc/keepassxc.ini keepass.patch || fail
+    rm keepass.patch
+    tee ~/.config/autostart/keepassxc.desktop<<EOL
+[Desktop Entry]
+Type=Application
+Exec=keepassxc
+Hidden=false
+NoDisplay=false
+X-GNOME-Autostart-enabled=true
+Name=KeepassXC
+Comment=password manager
 EOL
 
     sudo apt-get install pciutils -y || fail
@@ -368,6 +355,19 @@ install_discord() {
     echo "Expected error, don't panic!"
     sudo apt-get -fy install
     rm discord.deb
+    # make autostart
+    (
+    mkdir -p ~/.config/autostart/
+    tee ~/.config/autostart/discord.desktop<<EOL
+[Desktop Entry]
+Type=Application
+Exec=discord
+Hidden=false
+X-GNOME-Autostart-enabled=true
+Name=discord
+Comment=discord
+EOL
+    ) || fail
 }
 
 install_anki() {
@@ -593,3 +593,6 @@ EOL
     # dconf write /org/gnome/settings-daemon/plugins/media-keys/custom-keybindings "['/org/gnome/settings-daemon/plugins/media-keys/custom-keybindings/custom0/', '/org/gnome/settings-daemon/plugins/media-keys/custom-keybindings/custom1/', '/org/gnome/settings-daemon/plugins/media-keys/custom-keybindings/custom2/', '/org/gnome/settings-daemon/plugins/media-keys/custom-keybindings/custom3/', '/org/gnome/settings-daemon/plugins/media-keys/custom-keybindings/custom4/', '/org/gnome/settings-daemon/plugins/media-keys/custom-keybindings/custom5/']"
 
 }
+
+[[ "$1" == "" ]] && (echo "Specify a target!"; exit 1)
+install $1
