@@ -1,17 +1,23 @@
 #!/bin/bash
 
-./setup-ubuntu-base
+sudo echo "installing base" || exit 1
+./setup-ubuntu-base || exit 1
+
+fail() {
+    echo "ERROR, aborting!"
+    exit 1
+}
 
 prepend() {
     while read line; do echo "[$1] $line"; done
 }
 
 install() {
-    install/$1 | prepend $1
+    (install/$1 | prepend $1) || fail
 }
 
 install-apt() {
-    sudo apt-get install $1 -y | prepend "apt:$1"
+    (sudo apt-get install $1 -y | prepend "apt:$1") || fail
 }
 # install compartamentalized stuff
 
@@ -40,33 +46,33 @@ install-apt cloc
 
 # set global shortcut to ctrl+alt+a
 echo "Patching keepassxc config"
-patch ~/.config/keepassxc/keepassxc.ini patches/keepass.patch
+patch ~/.config/keepassxc/keepassxc.ini patches/keepass.patch || fail
 
 echo "#### Installing MySQL Workbench ####"
 install-apt mysql-workbench
 
 # install snaps
-sudo snap install gimp
-sudo snap install tldr
-sudo snap install --classic eclipse
+sudo snap install gimp || fail
+sudo snap install tldr || fail
+sudo snap install --classic eclipse || fail
 
 # install flatpak
 install-apt flatpak
-flatpak --user remote-add --if-not-exists flathub https://flathub.org/repo/flathub.flatpakrepo
+flatpak --user remote-add --if-not-exists flathub https://flathub.org/repo/flathub.flatpakrepo || fail
 
 (
     # printscreen keybind deps
-    sudo apt-get install exiftool xclip -y
-    bash mk_bindings.sh
+    sudo apt-get install exiftool xclip -y || fail
+    bash mk_bindings.sh || fail
 ) | prepend 'keybinds'
 
-bash mk_startup.sh | prepend 'startup'
+(bash mk_startup.sh | prepend 'startup') || fail
 
 # install zh & ja
 (
-    sudo apt-get install ibus-sunpinyin -y
-    sudo apt-get install ibus-anthy -y
-    sudo apt-get install ibus-clutter ibus-gtk ibus-gtk3 ibus-qt4 -y
+    sudo apt-get install ibus-sunpinyin -y || fail
+    sudo apt-get install ibus-anthy -y || fail
+    sudo apt-get install ibus-clutter ibus-gtk ibus-gtk3 ibus-qt4 -y || fail
     ibus restart
 ) | prepend 'lang'
 
@@ -80,7 +86,7 @@ echo 'PATH=$PATH:~/.local/bin:~/bin' >> ~/.bashrc
 
 echo "Patching nosplash"
 sudo patch /etc/default/grub -i patches/nosplash.patchpatch ~/.config/keepassxc/keepassxc.ini keepass.patch
-sudo update-grub
+sudo update-grub || fail
 
 echo "Installing aliases"
 cp aliases ~/aliases
@@ -93,5 +99,5 @@ Host *
     ServerAliveCountMax 2
 EOL
 
-sudo apt-get install pciutils -y
+sudo apt-get install pciutils -y || fail
 lspci | grep VGA | grep -qi NVIDIA && ./setup-cuda
