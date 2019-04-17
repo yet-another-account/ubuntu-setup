@@ -5,8 +5,9 @@
 echo "######### Installing Oracle JDK #########"
 
 # automate license
-echo debconf shared/accepted-oracle-license-v1-1 select true | sudo debconf-set-selections
-echo debconf shared/accepted-oracle-license-v1-1 seen true | sudo debconf-set-selections
+
+echo oracle-java11-installer shared/accepted-oracle-license-v1-2 select true | \
+sudo /usr/bin/debconf-set-selections
 
 sudo apt-get install dirmngr -y
 
