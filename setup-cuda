@@ -5,7 +5,7 @@ sudo apt-get install pciutils -y
 
 if [[ "$distro" == "Ubuntu" ]]; then
     # cutting edge version for ubuntu
-    nv_ver=418
+    nv_ver=410
     cuda_url=https://developer.nvidia.com/compute/cuda/10.0/Prod/local_installers/cuda_10.0.130_410.48_linux
     cudnn_url=http://developer.download.nvidia.com/compute/machine-learning/repos/ubuntu1804/x86_64/libcudnn7_7.4.2.24-1+cuda10.0_amd64.deb
     sudo add-apt-repository ppa:graphics-drivers -y
