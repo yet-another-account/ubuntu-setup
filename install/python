@@ -4,7 +4,7 @@
 
 echo "######### Installing python #########"
 
-sudo apt-get install -y software-properties-common build-essential python3 python3-distutils python3-testresources || exit 1
+sudo apt-get install -y software-properties-common build-essential python3 python3-distutils python3-testresources libpython3-dev || exit 1
 sudo apt-get remove -y python-pip python3-pip || exit 1
 curl https://bootstrap.pypa.io/get-pip.py -o get-pip.py
 sudo python3 get-pip.py || exit 1
