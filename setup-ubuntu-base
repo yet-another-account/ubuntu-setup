@@ -5,11 +5,11 @@ prepend() {
 }
 
 install() {
-    install/$1 | prepend $1
+    (install/$1 | prepend $1) || (echo "ERROR, aborting!"; exit 1)
 }
 
 install-apt() {
-    sudo apt-get install $1 -y | prepend "apt:$1"
+    (sudo apt-get install $1 -y | prepend "apt:$1") || (echo "ERROR, aborting!"; exit 1)
 }
 
 sudo echo "Installing..." || exit 1
