@@ -1,8 +1,0 @@
-[Desktop Entry]
-Type=Application
-Exec=keepassxc
-Hidden=false
-NoDisplay=false
-X-GNOME-Autostart-enabled=true
-Name=KeepassXC
-Comment=password manager
