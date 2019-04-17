@@ -50,7 +50,7 @@ sudo mkdir -p /usr/share/X11/xorg.conf.disabled/
 sudo mv /usr/share/X11/xorg.conf.d/10-nvidia.conf /usr/share/X11/xorg.conf.disabled/
 
 # fix: https://devtalk.nvidia.com/default/topic/1045975/cuda-setup-and-installation/-error-while-loading-shared-libraries-libcublas-so-10-0-cannot-open-shared-object-file-no-such-file-or-directory/
-echo 'export LD_LIBRARY_PATH=/usr/local/cuda-10.0/lib64${LD_LIBRARY_PATH:+:${LD_LIBRARY_PATH}}' > ~/.bashrc
+echo 'export LD_LIBRARY_PATH=/usr/local/cuda-10.0/lib64${LD_LIBRARY_PATH:+:${LD_LIBRARY_PATH}}' >> ~/.bashrc
 
 
 echo "restart to complete CUDA installation"
