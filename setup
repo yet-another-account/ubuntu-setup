@@ -99,6 +99,8 @@ install_desktop() {
     sudo snap install gimp || fail
     sudo snap install tldr || fail
     sudo snap install --classic eclipse || fail
+    sudo snap install --classic google-cloud-sdk || fail
+    sudo snap install --classic slack || fail
 
     # install flatpak
     install-apt flatpak
