@@ -165,6 +165,10 @@ EOL
 
     # Keepass config stuff
     # set global shortcut to ctrl+alt+a
+    
+    # write default config file
+    keepassxc & sleep 1 && pkill keepassxc
+    
     echo "Patching keepassxc config"
 tee keepass.patch<<EOL
 9,10c9,10
