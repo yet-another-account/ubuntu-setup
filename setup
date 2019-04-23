@@ -13,7 +13,7 @@ prepend() {
 }
 
 install() {
-    [ -e "~/.install/$1" ] || (install_$1 | prepend $1) || fail
+    [ -e ~/.install/$1 ] || (install_$1 | prepend $1) || fail
     mkdir -p ~/.install/
     touch ~/.install/$1
 }
