@@ -47,9 +47,6 @@ install_base() {
 install_desktop() {
     install base
 
-    sudo echo "installing base" || exit 1
-    ./setup-ubuntu-base || exit 1
-
     fail() {
         echo "ERROR, aborting!"
         exit 1
