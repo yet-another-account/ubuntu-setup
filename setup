@@ -90,6 +90,7 @@ install_desktop() {
     install-apt simplescreenrecorder
     install-apt p7zip
     install-apt cloc
+    install-apt ansible
 
 
     echo "#### Installing MySQL Workbench ####"
