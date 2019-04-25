@@ -118,7 +118,7 @@ install_desktop() {
 > GRUB_CMDLINE_LINUX_DEFAULT=""
 EOL
 
-    sudo patch /etc/default/grub -i nosplash.patch || fail
+    sudo patch /etc/default/grub -i nosplash.patch
     rm nosplash.patch
 
     sudo update-grub || fail
@@ -162,7 +162,7 @@ tee keepass.patch<<EOL
 > GlobalAutoTypeKey=65
 > GlobalAutoTypeModifiers=201326592
 EOL
-    patch ~/.config/keepassxc/keepassxc.ini keepass.patch || fail
+    patch ~/.config/keepassxc/keepassxc.ini keepass.patch
     rm keepass.patch
     tee ~/.config/autostart/keepassxc.desktop<<EOL
 [Desktop Entry]
