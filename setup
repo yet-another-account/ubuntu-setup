@@ -153,17 +153,97 @@ EOL
     # write default config file
     keepassxc & sleep 1 && pkill keepassxc
     
-    echo "Patching keepassxc config"
-tee keepass.patch<<EOL
-9,10c9,10
-< GlobalAutoTypeKey=0
-< GlobalAutoTypeModifiers=0
----
-> GlobalAutoTypeKey=65
-> GlobalAutoTypeModifiers=201326592
+    echo "Writing keepassxc config"
+    tee ~/.config/keepassxc/keepassxc.ini<<EOL
+[General]
+AutoReloadOnChange=true
+AutoSaveAfterEveryChange=true
+AutoSaveOnExit=false
+AutoTypeDelay=25
+AutoTypeEntryTitleMatch=true
+AutoTypeEntryURLMatch=true
+BackupBeforeSave=false
+GlobalAutoTypeKey=65
+GlobalAutoTypeModifiers=201326592
+IgnoreGroupExpansion=true
+LastOpenedDatabases=@Invalid()
+MinimizeOnCopy=false
+OpenPreviousDatabasesOnStartup=true
+RememberLastDatabases=true
+RememberLastKeyFiles=true
+SSHAgent=false
+SingleInstance=true
+UseAtomicSaves=true
+UseGroupIconOnEntryCreation=true
+ 
+[Browser]
+AlwaysAllowAccess=false
+AlwaysAllowUpdate=false
+BestMatchOnly=false
+CustomProxyLocation=
+Enabled=false
+MatchUrlScheme=true
+SearchInAllDatabases=false
+ShowNotification=true
+SortByUsername=false
+SupportBrowserProxy=true
+SupportKphFields=true
+UnlockDatabase=true
+UpdateBinaryPath=false
+UseCustomProxy=false
+ 
+[GUI]
+DarkTrayIcon=false
+DetailSplitterState=@Invalid()
+HideDetailsView=false
+HidePasswords=true
+HideUsernames=false
+Language=system
+ListViewState=@ByteArray()
+MainWindowGeometry=@ByteArray(\x1\xd9\xd0\xcb\0\x2\0\0\0\0\0\xb7\0\0\0\x8f\0\0\x3\xd6\0\0\x3\x4\0\0\0\xb7\0\0\0\xad\0\0\x3\xd6\0\0\x3\x4\0\0\0\0\0\0\0\0\x6@)
+MinimizeOnClose=false
+MinimizeOnStartup=false
+MinimizeToTray=false
+SearchViewState=@ByteArray()
+ShowTrayIcon=false
+SplitterState=@Invalid()
+ 
+[Http]
+AlwaysAllowAccess=false
+AlwaysAllowUpdate=false
+BestMatchOnly=false
+Enabled=false
+MatchUrlScheme=true
+Port=19455
+SearchInAllDatabases=false
+ShowNotification=true
+SortByUsername=false
+SupportKphFields=true
+UnlockDatabase=true
+generator\EASCII=false
+generator\EnsureEvery=true
+generator\ExcludeAlike=true
+generator\Length=16
+generator\LowerCase=true
+generator\Numbers=true
+generator\SpecialChars=false
+generator\UpperCase=true
+ 
+[security]
+IconDownloadFallbackToGoogle=false
+autotypeask=true
+clearclipboard=true
+clearclipboardtimeout=10
+hidenotes=false
+hidepassworddetails=true
+lockdatabaseidle=false
+lockdatabaseidlesec=240
+lockdatabaseminimize=false
+lockdatabasescreenlock=true
+passwordscleartext=false
+passwordsrepeat=false
+relockautotype=false
 EOL
-    patch ~/.config/keepassxc/keepassxc.ini keepass.patch
-    rm keepass.patch
     tee ~/.config/autostart/keepassxc.desktop<<EOL
 [Desktop Entry]
 Type=Application
