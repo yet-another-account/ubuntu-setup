@@ -1,0 +1,671 @@
+#!/bin/bash
+
+sudo echo "Installing literally everything..." || exit 1
+
+
+fail() {
+    echo "ERROR, aborting!"
+    exit 1
+}
+
+prepend() {
+    while read line; do echo "[$1] $line"; done
+}
+
+install() {
+    [ -e ~/.install/$1 ] || (install_$1 | prepend $1) || fail
+    mkdir -p ~/.install/
+    touch ~/.install/$1
+}
+
+install-apt() {
+    (sudo apt-get install $1 -y | prepend "apt:$1") || fail
+}
+
+install_base() {
+    sudo apt-get update || fail
+    sudo apt-get upgrade -y || fail
+    sudo apt-get install wget curl -y || fail
+
+    install nodejs
+    install python
+    install java
+    install git
+
+    echo "#### Installing cryptsetup (needed for LUKS) ####"
+    install-apt cryptsetup
+
+    install-apt vim
+
+    install-apt htop
+    install-apt iotop
+
+    install-apt dirmngr
+
+}
+
+install_desktop() {
+    install base
+
+    # install compartamentalized stuff
+
+    install docker
+    install atom
+    install discord
+    install electrum
+    install gparted
+    install chromium
+    install qbittorrent
+    install duplicity
+    install sqlitebrowser
+    install nemo
+    install trezord
+    install vscode
+    install anki
+    install sacred
+    #install keepassx
+
+    # install random apt stuff
+    install-apt keepassxc
+    install-apt neofetch
+    install-apt simplescreenrecorder
+    install-apt p7zip
+    install-apt cloc
+    install-apt ansible
+
+
+    echo "#### Installing MySQL Workbench ####"
+    install-apt mysql-workbench
+
+    # install snaps
+    sudo snap install gimp || fail
+    sudo snap install tldr || fail
+    sudo snap install --classic eclipse || fail
+    sudo snap install --classic google-cloud-sdk || fail
+    sudo snap install --classic slack || fail
+
+    # install flatpak
+    install-apt flatpak
+    flatpak --user remote-add --if-not-exists flathub https://flathub.org/repo/flathub.flatpakrepo || fail
+
+    (
+        # printscreen keybind deps
+        sudo apt-get install exiftool xclip -y || fail
+        make_bindings || fail
+    ) | prepend 'keybinds'
+
+    # install zh & ja
+    (
+        sudo apt-get install ibus-sunpinyin -y || fail
+        sudo apt-get install ibus-anthy -y || fail
+        sudo apt-get install ibus-clutter ibus-gtk ibus-gtk3 ibus-qt4 -y || fail
+        ibus restart
+    ) | prepend 'lang'
+
+    echo "#### Removing unity-webapps-common ####"
+    sudo apt-get remove unity-webapps-common -y
+
+    echo "#### Setting favorite apps ####"
+    dconf write "/org/gnome/shell/favorite-apps" "['firefox.desktop', 'nemo.desktop', 'org.gnome.Terminal.desktop', 'atom.desktop']"
+
+    echo 'PATH=$PATH:~/.local/bin:~/bin' >> ~/.bashrc
+
+    echo "Patching nosplash"
+    tee nosplash.patch<<EOL
+10c10
+< GRUB_CMDLINE_LINUX_DEFAULT="quiet splash"
+---
+> GRUB_CMDLINE_LINUX_DEFAULT=""
+EOL
+
+    sudo patch /etc/default/grub -i nosplash.patch
+    rm nosplash.patch
+
+    sudo update-grub || fail
+
+    echo "Installing aliases"
+    tee ~/aliases<<EOL
+alias jn='jupyter notebook'
+
+alias apti='sudo apt install'
+alias pipi='pip3 install --user'
+
+alias g='git'
+alias gc='git clone'
+alias gg='git gui'
+alias gro='git remote set-url origin'
+
+alias p='python3'
+alias pp='python2'
+EOL
+    echo ". ~/aliases" >> ~/.bashrc
+
+    echo "Adding ssh timeout config"
+    tee ~/.ssh/config<<EOL
+Host *
+    ServerAliveInterval 300
+    ServerAliveCountMax 2
+EOL
+
+    # Keepass config stuff
+    # set global shortcut to ctrl+alt+a
+    
+    # write default config file
+    keepassxc & sleep 1 && pkill keepassxc
+    
+    echo "Writing keepassxc config"
+    tee ~/.config/keepassxc/keepassxc.ini<<EOL
+[General]
+AutoReloadOnChange=true
+AutoSaveAfterEveryChange=true
+AutoSaveOnExit=false
+AutoTypeDelay=25
+AutoTypeEntryTitleMatch=true
+AutoTypeEntryURLMatch=true
+BackupBeforeSave=false
+GlobalAutoTypeKey=65
+GlobalAutoTypeModifiers=201326592
+IgnoreGroupExpansion=true
+LastOpenedDatabases=@Invalid()
+MinimizeOnCopy=false
+OpenPreviousDatabasesOnStartup=true
+RememberLastDatabases=true
+RememberLastKeyFiles=true
+SSHAgent=false
+SingleInstance=true
+UseAtomicSaves=true
+UseGroupIconOnEntryCreation=true
+ 
+[Browser]
+AlwaysAllowAccess=false
+AlwaysAllowUpdate=false
+BestMatchOnly=false
+CustomProxyLocation=
+Enabled=false
+MatchUrlScheme=true
+SearchInAllDatabases=false
+ShowNotification=true
+SortByUsername=false
+SupportBrowserProxy=true
+SupportKphFields=true
+UnlockDatabase=true
+UpdateBinaryPath=false
+UseCustomProxy=false
+ 
+[GUI]
+DarkTrayIcon=false
+DetailSplitterState=@Invalid()
+HideDetailsView=false
+HidePasswords=true
+HideUsernames=false
+Language=system
+ListViewState=@ByteArray()
+MainWindowGeometry=@ByteArray(\x1\xd9\xd0\xcb\0\x2\0\0\0\0\0\xb7\0\0\0\x8f\0\0\x3\xd6\0\0\x3\x4\0\0\0\xb7\0\0\0\xad\0\0\x3\xd6\0\0\x3\x4\0\0\0\0\0\0\0\0\x6@)
+MinimizeOnClose=false
+MinimizeOnStartup=false
+MinimizeToTray=false
+SearchViewState=@ByteArray()
+ShowTrayIcon=false
+SplitterState=@Invalid()
+ 
+[Http]
+AlwaysAllowAccess=false
+AlwaysAllowUpdate=false
+BestMatchOnly=false
+Enabled=false
+MatchUrlScheme=true
+Port=19455
+SearchInAllDatabases=false
+ShowNotification=true
+SortByUsername=false
+SupportKphFields=true
+UnlockDatabase=true
+generator\EASCII=false
+generator\EnsureEvery=true
+generator\ExcludeAlike=true
+generator\Length=16
+generator\LowerCase=true
+generator\Numbers=true
+generator\SpecialChars=false
+generator\UpperCase=true
+ 
+[security]
+IconDownloadFallbackToGoogle=false
+autotypeask=true
+clearclipboard=true
+clearclipboardtimeout=10
+hidenotes=false
+hidepassworddetails=true
+lockdatabaseidle=false
+lockdatabaseidlesec=240
+lockdatabaseminimize=false
+lockdatabasescreenlock=true
+passwordscleartext=false
+passwordsrepeat=false
+relockautotype=false
+EOL
+    tee ~/.config/autostart/keepassxc.desktop<<EOL
+[Desktop Entry]
+Type=Application
+Exec=keepassxc
+Hidden=false
+NoDisplay=false
+X-GNOME-Autostart-enabled=true
+Name=KeepassXC
+Comment=password manager
+EOL
+
+    sudo apt-get install pciutils -y || fail
+    lspci | grep VGA | grep -qi NVIDIA && install cuda
+
+}
+
+install_cuda() {
+    distro=$((lsb_release -ds 2>/dev/null || cat /etc/*release 2>/dev/null | head -n1 || uname -om) | awk '{ print $1 }')
+
+    sudo echo test || exit
+    sudo apt-get install pciutils -y
+
+    if [[ "$distro" == "Ubuntu" ]]; then
+        # cutting edge version for ubuntu
+        nv_ver=410
+        cuda_url=https://developer.nvidia.com/compute/cuda/10.0/Prod/local_installers/cuda_10.0.130_410.48_linux
+        cudnn_url=http://developer.download.nvidia.com/compute/machine-learning/repos/ubuntu1804/x86_64/libcudnn7_7.4.2.24-1+cuda10.0_amd64.deb
+        sudo add-apt-repository ppa:graphics-drivers -y
+        sudo apt-get update
+        sudo apt-get install nvidia-driver-${nv_ver} nvidia-utils-${nv_ver} nvidia-settings -y
+    fi
+
+    if [[ "$distro" == "Debian" ]]; then
+        # TODO: this doesn't work yet. make it work!
+        cuda_url=https://developer.nvidia.com/compute/cuda/10.0/Prod/local_installers/cuda_10.0.130_410.48_linux
+        cudnn_url=http://developer.download.nvidia.com/compute/machine-learning/repos/ubuntu1804/x86_64/libcudnn7_7.4.2.24-1+cuda10.0_amd64.deb
+        echo "deb http://httpredir.debian.org/debian stretch-backports main contrib non-free" | sudo tee -a /etc/apt/sources.list
+        sudo sed -i.bak 's/stretch[^ ]* main$/& contrib non-free/g' /etc/apt/sources.list
+
+        sudo apt-get update
+        sudo apt-get install linux-headers-$(uname -r|sed 's/[^-]*-[^-]*-//') -y
+        sudo apt-get install -t stretch-backports nvidia-driver nvidia-smi -y
+    fi
+
+    wget -N ${cuda_url} -O cuda.run
+    chmod +x cuda.run
+    sudo ./cuda.run --override --silent --toolkit --no-opengl-libs
+    rm cuda.run
+
+    wget -N ${cudnn_url} -O libcudnn.deb
+    sudo dpkg -i libcudnn.deb
+    rm libcudnn.deb
+
+    sudo apt-get install libcupti-dev -y
+
+
+    lspci | grep VGA | grep -qi Intel &&
+    sudo tee /usr/share/X11/xorg.conf.d/10-intel.conf<<EOL
+    Section "Device"
+            Identifier "Intel GPU"
+            Driver "modesetting"
+            BusID  "PCI:0:2:0"
+    EndSection
+EOL
+
+    sudo mkdir -p /usr/share/X11/xorg.conf.disabled/
+    sudo mv /usr/share/X11/xorg.conf.d/10-nvidia.conf /usr/share/X11/xorg.conf.disabled/
+
+    # fix: https://devtalk.nvidia.com/default/topic/1045975/cuda-setup-and-installation/-error-while-loading-shared-libraries-libcublas-so-10-0-cannot-open-shared-object-file-no-such-file-or-directory/
+    echo 'export LD_LIBRARY_PATH=/usr/local/cuda-10.0/lib64${LD_LIBRARY_PATH:+:${LD_LIBRARY_PATH}}' >> ~/.bashrc
+
+    echo "restart to complete CUDA installation"
+
+}
+
+install_myetherwallet() {
+    install git
+    cd ~
+    git clone https://github.com/kvhnuke/etherwallet
+    cd etherwallet
+    git checkout v3.21.03
+}
+
+install_umake() {
+    sudo add-apt-repository ppa:ubuntu-desktop/ubuntu-make
+    sudo apt-get update
+    sudo apt-get install ubuntu-make
+}
+
+install_atom() {
+    echo "######### Installing atom #########"
+    wget https://atom.io/download/deb -O atom.deb
+    sudo dpkg -i atom.deb
+    echo "Expected error--don't panic!"
+    sudo apt-get --fix-broken install -y
+    sudo apt-get update && sudo apt-get upgrade -y
+    sudo dpkg --configure -a
+    sudo apt-get install -f
+
+    sudo dpkg -i atom.deb
+
+    rm atom.deb
+    echo "######### Installing atom package dependencies #########"
+
+    pip3 install autopep8 --user
+
+    pip3 install python-language-server --user
+    pip3 install pyls-isort --user
+    pip3 install pycodestyle --user
+}
+
+install_iotawallet() {
+    wget https://github.com/iotaledger/wallet/releases/download/v2.5.7/iota_2.5.7_amd64.deb -O iota.deb
+
+    sudo dpkg -i iota.deb
+    sudo apt-get install -y --fix-broken
+
+    rm iota.deb
+}
+
+install_electrum() {
+    install python
+    sudo apt-get install python3-setuptools python3-pyqt5 -y
+    sudo pip3 install https://download.electrum.org/3.3.2/Electrum-3.3.2.tar.gz#egg=electrum[fast]
+}
+
+install_git() {
+    sudo apt-get install git git-gui gitg -y || fail
+    git config --global core.editor "vim"
+}
+
+install_sacred() {
+    install python
+    sudo apt-key adv --keyserver hkp://keyserver.ubuntu.com:80 --recv 2930ADAE8CAF5059EE73BB4B58712A2291FA4AD5
+    echo "deb [ arch=amd64,arm64 ] https://repo.mongodb.org/apt/ubuntu xenial/mongodb-org/3.6 multiverse" | sudo tee /etc/apt/sources.list.d/mongodb-org-3.6.list
+    sudo apt update
+    sudo apt install -y mongodb-org
+
+    sudo systemctl start mongod.service
+    sudo systemctl enable mongod.service
+
+    pip3 install sacred --user
+    pip3 install pymongo --user
+
+    npm install -g omniboard
+}
+
+install_nodejs() {
+    curl -o- https://raw.githubusercontent.com/creationix/nvm/v0.33.8/install.sh | bash
+
+    # refresh shell
+    . ~/.profile
+    . ~/.bashrc
+    . ~/.bash_profile
+
+    export NVM_DIR="$HOME/.nvm"
+    [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"  # This loads nvm
+    [ -s "$NVM_DIR/bash_completion" ] && \. "$NVM_DIR/bash_completion"  # This loads nvm bash_completion
+
+    nvm install node || fail
+}
+
+install_pycharm() {
+    install python
+    install umake
+    umake ide pycharm
+}
+
+install_nemo() {
+    sudo apt-get install nemo -y
+
+    gsettings set org.gnome.desktop.background show-desktop-icons false
+    gsettings set org.nemo.desktop show-desktop-icons true
+
+    xdg-mime default nemo.desktop inode/directory application/x-gnome-saved-search
+}
+
+install_discord() {
+    wget -O discord.deb "https://discordapp.com/api/download?platform=linux&format=deb"
+    sudo dpkg -i discord.deb
+    echo "Expected error, don't panic!"
+    sudo apt-get -fy install
+    rm discord.deb
+    # make autostart
+    (
+    mkdir -p ~/.config/autostart/
+    tee ~/.config/autostart/discord.desktop<<EOL
+[Desktop Entry]
+Type=Application
+Exec=discord
+Hidden=false
+X-GNOME-Autostart-enabled=true
+Name=discord
+Comment=discord
+EOL
+    ) || fail
+}
+
+install_anki() {
+    install python
+    wget https://apps.ankiweb.net/downloads/current/anki-2.1.8-linux-amd64.tar.bz2
+    tar xjf anki-2.1.8-linux-amd64.tar.bz2
+    cd anki-2.1.8-linux-amd64
+    sudo make install
+    cd ..
+    rm -rf anki-2.1.8-linux-amd64
+}
+
+install_docker() {
+    echo "#### Installing docker ####"
+    sudo apt-get remove docker docker-engine docker.io -y
+    sudo apt-get install  apt-transport-https ca-certificates curl software-properties-common -y
+    curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo apt-key add -
+    echo "#### Docker key ####"
+    sudo apt-key fingerprint 0EBFCD88
+    sudo add-apt-repository \
+       "deb [arch=amd64] https://download.docker.com/linux/ubuntu \
+       $(lsb_release -cs) \
+       stable"
+    sudo apt-get update
+    sudo apt-get install docker-ce -y
+
+    # install docker-compose
+    sudo curl -L https://github.com/docker/compose/releases/download/1.18.0/docker-compose-`uname -s`-`uname -m` -o /usr/local/bin/docker-compose
+    sudo chmod +x /usr/local/bin/docker-compose
+    docker-compose --version
+
+    # install nvidia-docker
+    # If you have nvidia-docker 1.0 installed: we need to remove it and all existing GPU containers
+    docker volume ls -q -f driver=nvidia-docker | xargs -r -I{} -n1 docker ps -q -a -f volume={} | xargs -r docker rm -f
+    sudo apt-get purge -y nvidia-docker
+
+    # Add the package repositories
+    curl -s -L https://nvidia.github.io/nvidia-docker/gpgkey | \
+      sudo apt-key add -
+    distribution=$(. /etc/os-release;echo $ID$VERSION_ID)
+    curl -s -L https://nvidia.github.io/nvidia-docker/$distribution/nvidia-docker.list | \
+      sudo tee /etc/apt/sources.list.d/nvidia-docker.list
+    sudo apt-get update
+
+    # Install nvidia-docker2 and reload the Docker daemon configuration
+    sudo apt-get install -y nvidia-docker2
+    sudo pkill -SIGHUP dockerd
+}
+
+install_sqlitebrowser() {
+    sudo add-apt-repository -y ppa:linuxgndu/sqlitebrowser
+    sudo apt-get update
+    sudo apt-get install sqlitebrowser -y
+}
+
+install_duplicity() {
+    sudo apt-get install -y duplicity
+    sudo apt-get install --reinstall python-gi -y
+    sudo apt-get install python3-pyside -y
+}
+
+install_trezord() {
+    echo "######### Installing trezord #########"
+
+    sudo apt-get install libudev-dev libusb-1.0-0-dev libfox-1.6-dev python3-dev -y
+
+    pip3 install trezor --force-reinstall --upgrade --user
+
+    wget http://security.ubuntu.com/ubuntu/pool/universe/libm/libmicrohttpd/libmicrohttpd10_0.9.44+dfsg-1ubuntu2_amd64.deb
+    sudo dpkg -i libmicrohttpd10_0.9.44+dfsg-1ubuntu2_amd64.deb
+    rm libmicrohttpd10_0.9.44+dfsg-1ubuntu2_amd64.deb
+
+    wget https://wallet.trezor.io/data/bridge/2.0.25/trezor-bridge_2.0.25_amd64.deb
+    sudo dpkg -i trezor-bridge_2.0.25_amd64.deb
+    rm trezor-bridge_2.0.25_amd64.deb
+
+    # write udev
+    sudo tee /etc/udev/rules.d/51-trezor.rules << EOF
+    # TREZOR
+    SUBSYSTEM=="usb", ATTR{idVendor}=="534c", ATTR{idProduct}=="0001", MODE="0660", GROUP="plugdev", TAG+="uaccess", TAG+="udev-acl", SYMLINK+="trezor%n"
+    KERNEL=="hidraw*", ATTRS{idVendor}=="534c", ATTRS{idProduct}=="0001",  MODE="0660", GROUP="plugdev", TAG+="uaccess", TAG+="udev-acl"
+
+    # TREZOR v2
+    SUBSYSTEM=="usb", ATTR{idVendor}=="1209", ATTR{idProduct}=="53c0", MODE="0660", GROUP="plugdev", TAG+="uaccess", TAG+="udev-acl", SYMLINK+="trezor%n"
+    SUBSYSTEM=="usb", ATTR{idVendor}=="1209", ATTR{idProduct}=="53c1", MODE="0660", GROUP="plugdev", TAG+="uaccess", TAG+="udev-acl", SYMLINK+="trezor%n"
+    KERNEL=="hidraw*", ATTRS{idVendor}=="1209", ATTRS{idProduct}=="53c0",  MODE="0660", GROUP="plugdev", TAG+="uaccess", TAG+="udev-acl"
+    KERNEL=="hidraw*", ATTRS{idVendor}=="1209", ATTRS{idProduct}=="53c1", MODE="0660", GROUP="plugdev", TAG+="uaccess", TAG+="udev-acl"
+EOF
+}
+
+install_qbittorrent() {
+    sudo add-apt-repository ppa:qbittorrent-team/qbittorrent-stable -y
+    sudo apt-get update
+    sudo apt-get install qbittorrent -y
+}
+
+install_vscode() {
+    # download from azure if possible, otherwise from Wayback machine
+    wget --referer 'https://code.visualstudio.com/docs/?dv=linux64_deb' https://az764295.vo.msecnd.net/stable/dea8705087adb1b5e5ae1d9123278e178656186a/code_1.30.1-1545156774_amd64.deb -O vscode.deb || \
+    wget https://web.archive.org/web/20181230203854/https://az764295.vo.msecnd.net/stable/dea8705087adb1b5e5ae1d9123278e178656186a/code_1.30.1-1545156774_amd64.deb -O vscode.deb
+
+    sudo dpkg -i vscode.deb
+
+    rm vscode.deb
+}
+
+install_java() {
+    # automate license
+
+    echo oracle-java11-installer shared/accepted-oracle-license-v1-2 select true | \
+    sudo /usr/bin/debconf-set-selections
+
+    sudo apt-get install dirmngr -y
+
+    sudo add-apt-repository ppa:linuxuprising/java -y || fail
+
+    # install oracle jdk
+    sudo apt-get update
+    sudo apt-get install oracle-java11-installer curl wget jq -y || fail
+    sudo apt-get install oracle-java11-set-default -y || fail
+
+    echo "Setting default java"
+    sudo sh -c 'echo JAVA_HOME="/usr/lib/jvm/java-8-oracle" >> /etc/environment'
+    source /etc/environment
+}
+
+install_python() {
+    sudo apt-get install -y software-properties-common build-essential python3 python3-distutils python3-testresources libpython3-dev || fail
+    sudo apt-get remove -y python-pip python3-pip || fail
+    curl https://bootstrap.pypa.io/get-pip.py -o get-pip.py
+    sudo python3 get-pip.py || fail
+    rm get-pip.py
+
+    #pip install -U pip || fail
+    #pip3 install -U pip || fail
+
+    pip install virtualenv --user || fail
+    pip3 install virtualenv --user || fail
+    pip3 install --user pipenv || fail
+
+    # needed for matplotlib
+    sudo apt-get install libpng-dev libfreetype6-dev python3-tk -y || fail
+
+    # lmxl
+    sudo apt-get install libxml2-dev libxslt-dev -y
+
+    # common pkgs
+    python3 -m pip install autopep8 jedi matplotlib pillow pyuserinput --user
+
+    # ml pkgs
+    python3 -m pip install jupyter tensorflow torch torchvision gym pandas scipy --user
+}
+
+install_keepassx() {
+    echo "######### Installing KeePassX #########"
+
+    mkdir -p /tmp/keepassx
+    cd /tmp/keepassx
+
+    # install dependencies
+    sudo apt-get install build-essential cmake qtbase5-dev libqt5x11extras5-dev qttools5-dev qttools5-dev-tools libgcrypt20-dev zlib1g-dev libxi-dev libxtst-dev -y
+    sudo apt-get install qt-sdk -y
+
+    git clone https://github.com/keepassx/keepassx
+    cd keepassx
+    git checkout 2.0.3
+
+    mkdir build
+    cd build
+    cmake ..
+    make
+
+    sudo make install
+}
+
+make_bindings() {
+    echo "Adding key bindings"
+    function x() {
+        echo $1
+    }
+    function createShortcut() {
+        name="$2"
+        binding="$4"
+        path="/org/gnome/settings-daemon/plugins/media-keys/custom-keybindings/custom$1"
+    #    x "$3"
+        dconf write "$path/name" "'""$name""'"
+        dconf write "$path/command" "'""$3""'" #$(echo $3 | LC_ALL=C sed -e 's/[^a-zA-Z0-9,._+@%/-]/\\&/g; 1{$s/^$/""/}; 1!s/^/"/; $!s/$/"/')
+        dconf write "$path/binding" "'""$binding""'"
+    }
+
+    # dconf write /org/gnome/settings-daemon/plugins/media-keys/custom-keybindings/custom0/binding '"<Primary><Shift>exclam"'
+    tee $HOME/screenshot<<'EOL'
+#!/bin/sh
+bash -c 'PFILE="$HOME/Pictures/Screenshot-$(date +%F_%H-%M-%S).png"; gnome-screenshot -a -f "$PFILE"; xclip -selection clipboard -t image/png < $PFILE'
+
+EOL
+    tee $HOME/screenshot_edit<<'EOL'
+#!/bin/sh
+bash -c 'PFILE="$HOME/Pictures/Screenshot-$(date +%F_%H-%M-%S).png"; gnome-screenshot -a -f "$PFILE"; xclip -selection clipboard -t image/png < $PFILE; exiftool -all= $PFILE; [ -e $PFILE ] && gimp $PFILE; xclip -selection clipboard -t image/png < $PFILE'
+EOL
+
+    bpath="/org/gnome/settings-daemon/plugins/media-keys"
+
+    dconf write "$bpath/screenshot" '""'
+    dconf write "$bpath/area-screenshot" '""'
+
+    createShortcut 0 'screenshot' "$HOME/screenshot" 'Print'
+    createShortcut 1 'screenshot+edit' "$HOME/screenshot_edit" '<Primary>Print'
+    ct=2
+
+    overallbindings=""
+    customindingPathPrefix="/org/gnome/settings-daemon/plugins/media-keys/custom-keybindings/custom";
+
+    for (( i = 0 ; i < $ct; i++ ));
+    do
+        overallbindings="$overallbindings, '$customindingPathPrefix$i/'"
+    done
+
+    overallbindings="[${overallbindings:2}]" # Delete the first 2 chars: " ," - space and comma
+    echo $overallbindings
+
+    # Update the list of bindings for the shortcuts to work
+    dconf write /org/gnome/settings-daemon/plugins/media-keys/custom-keybindings "$overallbindings"
+    # dconf write /org/gnome/settings-daemon/plugins/media-keys/custom-keybindings "['/org/gnome/settings-daemon/plugins/media-keys/custom-keybindings/custom0/', '/org/gnome/settings-daemon/plugins/media-keys/custom-keybindings/custom1/', '/org/gnome/settings-daemon/plugins/media-keys/custom-keybindings/custom2/', '/org/gnome/settings-daemon/plugins/media-keys/custom-keybindings/custom3/', '/org/gnome/settings-daemon/plugins/media-keys/custom-keybindings/custom4/', '/org/gnome/settings-daemon/plugins/media-keys/custom-keybindings/custom5/']"
+
+}
+
+[[ "$1" == "" ]] && (echo "Specify a target!"; exit 1)
+install $1
