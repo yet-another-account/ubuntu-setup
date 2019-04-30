@@ -590,7 +590,7 @@ install_python() {
     python3 -m pip install autopep8 jedi matplotlib pillow pyuserinput --user
 
     # ml pkgs
-    python3 -m pip install jupyter tensorflow torch torchvision gym pandas scipy --user
+    python3 -m pip install jupyter tensorflow torch torchvision gym pandas scipy scipy-image --user
 }
 
 install_keepassx() {
