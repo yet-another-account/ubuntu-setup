@@ -138,9 +138,10 @@ alias gro='git remote set-url origin'
 alias p='python3'
 alias pp='python2'
 
-alias d='docker --runtime=nvidia'
-alias db='docker build --runtime=nvidia'
+alias d='docker'
+alias db='docker build'
 alias dr='docker run --runtime=nvidia'
+alias dbr='docker run --rm -it $(docker build -q .)'
 EOL
     echo ". ~/aliases" >> ~/.bashrc
 
