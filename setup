@@ -596,6 +596,10 @@ install_python() {
 
     # ml pkgs
     python3 -m pip install jupyter tensorflow torch torchvision gym pandas scipy scipy-image --user
+    
+    # install poetry
+    sudo apt-get install python3-venv
+    pip3 install --user poetry
 }
 
 install_keepassx() {
