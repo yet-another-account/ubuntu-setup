@@ -282,6 +282,7 @@ install_cuda() {
         cudnn_url=http://developer.download.nvidia.com/compute/machine-learning/repos/ubuntu1804/x86_64/libcudnn7_7.4.2.24-1+cuda10.0_amd64.deb
         sudo add-apt-repository ppa:graphics-drivers -y
         sudo apt-get update
+        sudo apt-get install libnvidia-compute-${nv_ver}
         sudo apt-get install nvidia-driver-${nv_ver} nvidia-utils-${nv_ver} nvidia-settings -y
     fi
 
