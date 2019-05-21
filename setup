@@ -266,7 +266,6 @@ EOL
 }
 
 install_cuda() {
-    distro=$((lsb_release -ds 2>/dev/null || cat /etc/*release 2>/dev/null | head -n1 || uname -om) | awk '{ print $1 }')
     sudo echo test || exit
     
     # remove old
@@ -275,28 +274,15 @@ install_cuda() {
     
     sudo apt-get install pciutils -y
 
-    if [[ "$distro" == "Ubuntu" ]]; then
-        # cutting edge version for ubuntu
-        nv_ver=410
-        cuda_url=https://developer.nvidia.com/compute/cuda/10.0/Prod/local_installers/cuda_10.0.130_410.48_linux
-        cudnn_url=http://developer.download.nvidia.com/compute/machine-learning/repos/ubuntu1804/x86_64/libcudnn7_7.4.2.24-1+cuda10.0_amd64.deb
-        sudo add-apt-repository ppa:graphics-drivers -y
-        sudo apt-get update
-        sudo apt-get install libnvidia-compute-${nv_ver}
-        sudo apt-get install nvidia-driver-${nv_ver} nvidia-utils-${nv_ver} nvidia-settings -y
-    fi
+    # cutting edge version for ubuntu
+    nv_ver=410
+    cuda_url=https://developer.nvidia.com/compute/cuda/10.0/Prod/local_installers/cuda_10.0.130_410.48_linux
+    cudnn_url=http://developer.download.nvidia.com/compute/machine-learning/repos/ubuntu1804/x86_64/libcudnn7_7.4.2.24-1+cuda10.0_amd64.deb
+    sudo add-apt-repository ppa:graphics-drivers -y
+    sudo apt-get update
+    sudo apt-get install libnvidia-compute-${nv_ver}
+    sudo apt-get install nvidia-driver-${nv_ver} nvidia-utils-${nv_ver} nvidia-settings -y
 
-    if [[ "$distro" == "Debian" ]]; then
-        # TODO: this doesn't work yet. make it work!
-        cuda_url=https://developer.nvidia.com/compute/cuda/10.0/Prod/local_installers/cuda_10.0.130_410.48_linux
-        cudnn_url=http://developer.download.nvidia.com/compute/machine-learning/repos/ubuntu1804/x86_64/libcudnn7_7.4.2.24-1+cuda10.0_amd64.deb
-        echo "deb http://httpredir.debian.org/debian stretch-backports main contrib non-free" | sudo tee -a /etc/apt/sources.list
-        sudo sed -i.bak 's/stretch[^ ]* main$/& contrib non-free/g' /etc/apt/sources.list
-
-        sudo apt-get update
-        sudo apt-get install linux-headers-$(uname -r|sed 's/[^-]*-[^-]*-//') -y
-        sudo apt-get install -t stretch-backports nvidia-driver nvidia-smi -y
-    fi
 
     wget -N ${cuda_url} -O cuda.run
     chmod +x cuda.run
