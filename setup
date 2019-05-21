@@ -270,7 +270,7 @@ install_cuda() {
     sudo echo test || exit
     
     # remove old
-    sudo apt-get remove -y nvidia-driver-* nvidia-utils-*
+    sudo apt-get remove -y nvidia-*
     sudo rm -rf /usr/local/cuda*
     
     sudo apt-get install pciutils -y
