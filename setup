@@ -604,8 +604,13 @@ install_python() {
     python3 -m pip install jupyter tensorflow torch torchvision gym pandas scipy scipy-image --user
     
     # install poetry
-    sudo apt-get install python3-venv
-    pip3 install --user poetry
+    sudo apt-get install -y python3-venv
+    curl -sSL https://raw.githubusercontent.com/sdispater/poetry/master/get-poetry.py | python3
+    
+    # install pyenv
+    sudo apt-get install -y python3-openssl
+    curl https://pyenv.run | bash
+    pyenv install 3.7.0
 }
 
 install_keepassx() {
