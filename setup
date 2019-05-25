@@ -629,6 +629,22 @@ install_keepassx() {
     sudo make install
 }
 
+install_gluster() {
+    # purge existing
+    sudo dpkg --purge glusterfs-server
+    sudo apt-get install -f
+    sudo apt-get autoremove -y
+    
+    sudo apt-get install software-properties-common -y
+
+    # ATTN! for some reason, doesn't work without ppa!
+    sudo add-apt-repository ppa:gluster/glusterfs-6 -y
+    sudo apt-get update
+    
+    sudo apt-get install glusterfs-server -y
+
+}
+
 make_bindings() {
     echo "Adding key bindings"
     function x() {
