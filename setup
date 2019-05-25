@@ -642,7 +642,7 @@ install_gluster() {
     sudo apt-get update
     
     sudo apt-get install glusterfs-server -y
-
+    sudo chown $USER:$USER /var/log/glusterfs/cli.log
 }
 
 make_bindings() {
