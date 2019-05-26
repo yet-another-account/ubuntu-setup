@@ -661,7 +661,7 @@ install_moosefs_base() {
     wget -O- https://ppa.moosefs.com/moosefs.key | sudo apt-key add -
     
     # check for pi
-    grep -q BCM2708 /proc/cpuinfo &&
+    grep -q BCM /proc/cpuinfo &&
     (echo "deb http://ppa.moosefs.com/moosefs-3/apt/raspbian/jessie jessie main" | sudo tee /etc/apt/sources.list.d/moosefs-rpi3.list) ||
     (echo "deb http://ppa.moosefs.com/moosefs-3/apt/ubuntu/bionic bionic main" | sudo tee /etc/apt/sources.list.d/moosefs.list)
 
