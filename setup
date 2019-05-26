@@ -649,7 +649,12 @@ install_ceph() {
     wget -q -O- 'https://download.ceph.com/keys/release.asc' | sudo apt-key add -
     echo deb https://download.ceph.com/debian-nautilus/ $(lsb_release -sc) main | sudo tee /etc/apt/sources.list.d/ceph.list
     sudo apt-get update -y
-    sudo apt-get install -y ceph-deploy ntp
+    sudo apt-get install -y ceph-deploy ntp openssh-server
+    
+    sudo useradd -d /home/ceph -m ceph
+    echo "Password for user ceph must be set manually!"
+    echo "ceph ALL = (root) NOPASSWD:ALL" | sudo tee /etc/sudoers.d/ceph
+    sudo chmod 0440 /etc/sudoers.d/ceph
 }
 
 make_bindings() {
