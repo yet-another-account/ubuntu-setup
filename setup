@@ -657,6 +657,22 @@ install_ceph() {
     sudo chmod 0440 /etc/sudoers.d/ceph
 }
 
+install_moosefs_base() {
+    wget -O- https://ppa.moosefs.com/moosefs.key | sudo apt-key add -
+    
+    # check for pi
+    grep -q BCM2708 /proc/cpuinfo &&
+    (echo "deb http://ppa.moosefs.com/moosefs-3/apt/raspbian/jessie jessie main" | sudo tee /etc/apt/sources.list.d/moosefs-rpi3.list) ||
+    (echo "deb http://ppa.moosefs.com/moosefs-3/apt/ubuntu/bionic bionic main" | sudo tee /etc/apt/sources.list.d/moosefs.list)
+
+    sudo apt-get update
+}
+
+install_moosefs_master() {
+    install moosefs_base
+    sudo apt-get install moosefs-master moosefs-cgi moosefs-cgiserv moosefs-cli moosefs-client
+}
+
 make_bindings() {
     echo "Adding key bindings"
     function x() {
