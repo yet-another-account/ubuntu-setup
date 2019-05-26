@@ -671,6 +671,21 @@ install_moosefs_base() {
 install_moosefs_master() {
     install moosefs_base
     sudo apt-get install -y moosefs-master moosefs-cgi moosefs-cgiserv moosefs-cli moosefs-client moosefs-chunkserver
+    
+    (
+        cd /etc/mfs
+        sudo cp mfsmaster.cfg.sample mfsmaster.cfg
+        sudo cp mfsexports.cfg.sample mfsexports.cfg
+    )
+    
+    (
+        cd /var/lib/mfs
+        sudo cp metadata.mfs.empty metadata.mfs
+        sudo chown mfs:mfs metadata.mfs
+        sudo rm metadata.mfs.empty
+    )
+    
+    sudo mfsmaster start
 }
 
 make_bindings() {
