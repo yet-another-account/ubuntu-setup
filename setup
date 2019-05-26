@@ -670,7 +670,7 @@ install_moosefs_base() {
 
 install_moosefs_master() {
     install moosefs_base
-    sudo apt-get install -y moosefs-master moosefs-cgi moosefs-cgiserv moosefs-cli moosefs-client moosefs-chunkserver
+    sudo apt-get install -y moosefs-master moosefs-cgi moosefs-cgiserv moosefs-cli moosefs-client
     
     (
         cd /etc/mfs
@@ -686,6 +686,17 @@ install_moosefs_master() {
     )
     
     sudo mfsmaster start
+}
+
+install_moosefs_chunkserver() {
+    install moosefs_base
+    sudo apt-get install -y moosefs-chunkserver
+    
+    (
+        cd /etc/mfs
+        sudo cp mfschunkserver.cfg.sample mfschunkserver.cfg
+        sudo cp mfshdd.cfg.sample mfshdd.cfg
+    )
 }
 
 make_bindings() {
