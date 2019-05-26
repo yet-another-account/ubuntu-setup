@@ -685,7 +685,8 @@ install_moosefs_master() {
         sudo rm metadata.mfs.empty
     )
     
-    sudo mfsmaster start
+    sudo systemctl enable moosefs-master
+    sudo systemctl enable moosefs-cgiserv
 }
 
 install_moosefs_chunkserver() {
@@ -697,6 +698,7 @@ install_moosefs_chunkserver() {
         sudo cp mfschunkserver.cfg.sample mfschunkserver.cfg
         sudo cp mfshdd.cfg.sample mfshdd.cfg
     )
+    sudo systemctl enable moosefs-chunkserver
 }
 
 make_bindings() {
