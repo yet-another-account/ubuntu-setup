@@ -670,7 +670,7 @@ install_moosefs_base() {
 
 install_moosefs_master() {
     install moosefs_base
-    sudo apt-get install moosefs-master moosefs-cgi moosefs-cgiserv moosefs-cli moosefs-client
+    sudo apt-get install -y moosefs-master moosefs-cgi moosefs-cgiserv moosefs-cli moosefs-client moosefs-chunkserver
 }
 
 make_bindings() {
