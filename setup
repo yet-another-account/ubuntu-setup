@@ -83,6 +83,7 @@ install_desktop() {
     sudo snap install --classic eclipse || fail
     sudo snap install --classic google-cloud-sdk || fail
     sudo snap install --classic slack || fail
+    sudo snap install pycharm-community --classic || fail
 
     # install flatpak
     install-apt flatpak
