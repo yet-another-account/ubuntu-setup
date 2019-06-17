@@ -72,6 +72,7 @@ install_desktop() {
     install-apt p7zip
     install-apt cloc
     install-apt ansible
+    install-apt silversearcher-ag
 
 
     echo "#### Installing MySQL Workbench ####"
