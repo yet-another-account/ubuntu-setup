@@ -39,6 +39,7 @@ install_base() {
 
     install-apt htop
     install-apt iotop
+    install-apt nmap
 
     install-apt dirmngr
 
@@ -63,7 +64,6 @@ install_desktop() {
     install vscode
     install anki
     install sacred
-    #install keepassx
 
     # install random apt stuff
     install-apt keepassxc
@@ -147,6 +147,7 @@ alias dbr='docker run --rm -it $(docker build -q .)'
 EOL
     echo ". ~/aliases" >> ~/.bashrc
 
+    # prevent ssh sessions from timing out
     echo "Adding ssh timeout config"
     tee ~/.ssh/config<<EOL
 Host *
@@ -263,6 +264,12 @@ Comment=password manager
 EOL
 
     sudo apt-get install pciutils -y || fail
+    
+    # install cuda if nvidia gpu found
+    # WARNING: CUDA install is for scientific computing!
+    # For gaming, CAD, or any application where the GPU drives a screen do not use this! 
+    # this script is aimed at installing CUDA while disabling the graphical output on the GPU to save VRAM
+    # Comment out the following line if that is you. 
     lspci | grep VGA | grep -qi NVIDIA && install cuda
 
 }
