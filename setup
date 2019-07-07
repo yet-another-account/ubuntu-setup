@@ -712,6 +712,17 @@ install_moosefs_chunkserver() {
     sudo systemctl enable moosefs-chunkserver
 }
 
+install_autokey() {
+    pip3 install --user autokey
+    
+    # https://askubuntu.com/questions/331207/autokey-inserts-blank-lines
+    sudo tee /usr/share/dbus-1/services/org.autokey.Service <<EOL
+[D-BUS Service] 
+Name=org.autokey.Service 
+Exec=/usr/bin/autokey
+EOL
+}
+
 make_bindings() {
     echo "Adding key bindings"
     function x() {
