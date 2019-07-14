@@ -432,6 +432,9 @@ install_nemo() {
     gsettings set org.nemo.desktop show-desktop-icons true
 
     xdg-mime default nemo.desktop inode/directory application/x-gnome-saved-search
+    
+    # set F4 -> open terminal
+    echo '(gtk_accel_path "<Actions>/DirViewActions/OpenInTerminal" "F4")' > ~/.gnome2/accels/nemo
 }
 
 install_discord() {
