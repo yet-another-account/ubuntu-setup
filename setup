@@ -70,10 +70,20 @@ install_desktop() {
     install-apt keepassxc
     install-apt neofetch
     install-apt simplescreenrecorder
-    install-apt p7zip
     install-apt cloc
     install-apt ansible
     install-apt silversearcher-ag
+    
+    # all the compression algorithms
+    install-apt p7zip
+    install-apt arj
+    install-apt cabextract
+    install-apt unace
+    install-apt unrar
+    install-apt sharutils
+    install-apt rar
+    install-apt mpack
+    install-apt zstd
 
 
     echo "#### Installing MySQL Workbench ####"
