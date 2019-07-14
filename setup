@@ -40,6 +40,7 @@ install_base() {
     install-apt htop
     install-apt iotop
     install-apt nmap
+    install-apt unp
 
     install-apt dirmngr
 
