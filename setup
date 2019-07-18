@@ -539,9 +539,9 @@ install_trezord() {
     sudo dpkg -i libmicrohttpd10_0.9.44+dfsg-1ubuntu2_amd64.deb
     rm libmicrohttpd10_0.9.44+dfsg-1ubuntu2_amd64.deb
 
-    wget https://wallet.trezor.io/data/bridge/2.0.25/trezor-bridge_2.0.25_amd64.deb
-    sudo dpkg -i trezor-bridge_2.0.25_amd64.deb
-    rm trezor-bridge_2.0.25_amd64.deb
+    wget https://wallet.trezor.io/data/bridge/2.0.27/trezor-bridge_2.0.27_amd64.deb
+    sudo dpkg -i trezor-bridge_2.0.27_amd64.deb
+    rm trezor-bridge_2.0.27_amd64.deb
 
     # write udev
     sudo tee /etc/udev/rules.d/51-trezor.rules << EOF
