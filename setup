@@ -73,6 +73,7 @@ install_desktop() {
     install-apt cloc
     install-apt ansible
     install-apt silversearcher-ag
+    install-apt renameutils
     
     # all the compression algorithms
     install-apt p7zip
