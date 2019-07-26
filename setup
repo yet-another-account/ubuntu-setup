@@ -43,6 +43,8 @@ install_base() {
     install-apt unp
 
     install-apt dirmngr
+    
+    echo 'startup_message off' >> ~/.screenrc
 
 }
 
