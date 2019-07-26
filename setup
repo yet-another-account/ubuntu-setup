@@ -334,6 +334,18 @@ EOL
     # fix: https://devtalk.nvidia.com/default/topic/1045975/cuda-setup-and-installation/-error-while-loading-shared-libraries-libcublas-so-10-0-cannot-open-shared-object-file-no-such-file-or-directory/
     echo 'export LD_LIBRARY_PATH=/usr/local/cuda-10.0/lib64${LD_LIBRARY_PATH:+:${LD_LIBRARY_PATH}}' >> ~/.bashrc
 
+    # torch w/ cuda 10
+    python3 -m pip uninstall torch -y
+    python3 -m pip uninstall torchvision -y
+    python3 -m pip install https://download.pytorch.org/whl/cu100/torch-1.1.0-cp36-cp36m-linux_x86_64.whl --user
+    python3 -m pip install https://download.pytorch.org/whl/cu100/torchvision-0.3.0-cp36-cp36m-linux_x86_64.whl --user
+    
+    # install pytorch apex
+    git clone https://github.com/NVIDIA/apex
+    cd apex
+    pip install -v --no-cache-dir --global-option="--cpp_ext" --global-option="--cuda_ext" ./ || fail
+    cd ..
+
     echo "restart to complete CUDA installation"
 
 }
@@ -621,12 +633,6 @@ install_python() {
 
     # ml pkgs
     python3 -m pip install jupyter tensorflow-gpu gym pandas scipy scipy-image --user
-    
-    # torch w/ cuda 10
-    python3 -m pip uninstall torch -y
-    python3 -m pip uninstall torchvision -y
-    python3 -m pip install https://download.pytorch.org/whl/cu100/torch-1.1.0-cp36-cp36m-linux_x86_64.whl --user
-    python3 -m pip install https://download.pytorch.org/whl/cu100/torchvision-0.3.0-cp36-cp36m-linux_x86_64.whl --user
     
     # install poetry
     sudo apt-get install -y python3-venv
