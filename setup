@@ -295,28 +295,28 @@ install_cuda() {
     sudo apt-get remove -y nvidia-* libnvidia-*
     sudo rm -rf /usr/local/cuda*
     
-    sudo apt-get install pciutils -y
+    sudo apt-get install pciutils -y || fail
 
     # cutting edge version for ubuntu
     nv_ver=410
     cuda_url=https://developer.nvidia.com/compute/cuda/10.0/Prod/local_installers/cuda_10.0.130_410.48_linux
     cudnn_url=http://developer.download.nvidia.com/compute/machine-learning/repos/ubuntu1804/x86_64/libcudnn7_7.4.2.24-1+cuda10.0_amd64.deb
-    sudo add-apt-repository ppa:graphics-drivers -y
+    sudo add-apt-repository ppa:graphics-drivers -y || fail
     sudo apt-get update
-    sudo apt-get install libnvidia-compute-${nv_ver}
-    sudo apt-get install nvidia-driver-${nv_ver} nvidia-utils-${nv_ver} nvidia-settings -y
+    sudo apt-get install libnvidia-compute-${nv_ver} || fail
+    sudo apt-get install nvidia-driver-${nv_ver} nvidia-utils-${nv_ver} nvidia-settings -y || fail
 
 
     wget -N ${cuda_url} -O cuda.run
     chmod +x cuda.run
-    sudo ./cuda.run --override --silent --toolkit --no-opengl-libs
+    sudo ./cuda.run --override --silent --toolkit --no-opengl-libs || fail
     rm cuda.run
 
     wget -N ${cudnn_url} -O libcudnn.deb
-    sudo dpkg -i libcudnn.deb
+    sudo dpkg -i libcudnn.deb || fail
     rm libcudnn.deb
 
-    sudo apt-get install libcupti-dev -y
+    sudo apt-get install libcupti-dev -y || fail
 
 
     lspci | grep VGA | grep -qi Intel &&
@@ -337,8 +337,8 @@ EOL
     # torch w/ cuda 10
     python3 -m pip uninstall torch -y
     python3 -m pip uninstall torchvision -y
-    python3 -m pip install https://download.pytorch.org/whl/cu100/torch-1.1.0-cp36-cp36m-linux_x86_64.whl --user
-    python3 -m pip install https://download.pytorch.org/whl/cu100/torchvision-0.3.0-cp36-cp36m-linux_x86_64.whl --user
+    python3 -m pip install https://download.pytorch.org/whl/cu100/torch-1.1.0-cp36-cp36m-linux_x86_64.whl --user || fail
+    python3 -m pip install https://download.pytorch.org/whl/cu100/torchvision-0.3.0-cp36-cp36m-linux_x86_64.whl --user || fail
     
     # install pytorch apex
     git clone https://github.com/NVIDIA/apex
@@ -366,7 +366,7 @@ install_umake() {
 
 install_atom() {
     echo "######### Installing atom #########"
-    wget https://atom.io/download/deb -O atom.deb
+    wget https://atom.io/download/deb -O atom.deb || fail
     sudo dpkg -i atom.deb
     echo "Expected error--don't panic!"
     sudo apt-get --fix-broken install -y
@@ -374,7 +374,7 @@ install_atom() {
     sudo dpkg --configure -a
     sudo apt-get install -f
 
-    sudo dpkg -i atom.deb
+    sudo dpkg -i atom.deb || fail
 
     rm atom.deb
     echo "######### Installing atom package dependencies #########"
@@ -389,7 +389,7 @@ install_atom() {
 install_iotawallet() {
     wget https://github.com/iotaledger/wallet/releases/download/v2.5.7/iota_2.5.7_amd64.deb -O iota.deb
 
-    sudo dpkg -i iota.deb
+    sudo dpkg -i iota.deb || fail
     sudo apt-get install -y --fix-broken
 
     rm iota.deb
@@ -397,8 +397,8 @@ install_iotawallet() {
 
 install_electrum() {
     install python
-    sudo apt-get install python3-setuptools python3-pyqt5 -y
-    sudo pip3 install https://download.electrum.org/3.3.2/Electrum-3.3.2.tar.gz#egg=electrum[fast]
+    sudo apt-get install python3-setuptools python3-pyqt5 -y || fail
+    sudo pip3 install https://download.electrum.org/3.3.2/Electrum-3.3.2.tar.gz#egg=electrum[fast] || fail
 }
 
 install_git() {
@@ -411,7 +411,7 @@ install_sacred() {
     sudo apt-key adv --keyserver hkp://keyserver.ubuntu.com:80 --recv 2930ADAE8CAF5059EE73BB4B58712A2291FA4AD5
     echo "deb [ arch=amd64,arm64 ] https://repo.mongodb.org/apt/ubuntu xenial/mongodb-org/3.6 multiverse" | sudo tee /etc/apt/sources.list.d/mongodb-org-3.6.list
     sudo apt update
-    sudo apt install -y mongodb-org
+    sudo apt install -y mongodb-org || fail
 
     sudo systemctl start mongod.service
     sudo systemctl enable mongod.service
@@ -419,7 +419,7 @@ install_sacred() {
     pip3 install sacred --user
     pip3 install pymongo --user
 
-    npm install -g omniboard
+    npm install -g omniboard || fail
 }
 
 install_nodejs() {
@@ -448,16 +448,16 @@ install_nodejs() {
 install_pycharm() {
     install python
     install umake
-    umake ide pycharm
+    umake ide pycharm || fail
 }
 
 install_nemo() {
-    sudo apt-get install nemo -y
+    sudo apt-get install nemo -y || fail
 
-    gsettings set org.gnome.desktop.background show-desktop-icons false
-    gsettings set org.nemo.desktop show-desktop-icons true
+    gsettings set org.gnome.desktop.background show-desktop-icons false || fail
+    gsettings set org.nemo.desktop show-desktop-icons true || fail
 
-    xdg-mime default nemo.desktop inode/directory application/x-gnome-saved-search
+    xdg-mime default nemo.desktop inode/directory application/x-gnome-saved-search || fail
     
     # set F4 -> open terminal
     echo '(gtk_accel_path "<Actions>/DirViewActions/OpenInTerminal" "F4")' > ~/.gnome2/accels/nemo
@@ -467,7 +467,7 @@ install_discord() {
     wget -O discord.deb "https://discordapp.com/api/download?platform=linux&format=deb"
     sudo dpkg -i discord.deb
     echo "Expected error, don't panic!"
-    sudo apt-get -fy install
+    sudo apt-get -fy install || fail
     rm discord.deb
     # make autostart
     (
@@ -489,7 +489,7 @@ install_anki() {
     wget https://apps.ankiweb.net/downloads/current/anki-2.1.8-linux-amd64.tar.bz2
     tar xjf anki-2.1.8-linux-amd64.tar.bz2
     cd anki-2.1.8-linux-amd64
-    sudo make install
+    sudo make install || fail
     cd ..
     rm -rf anki-2.1.8-linux-amd64
 }
@@ -497,7 +497,7 @@ install_anki() {
 install_docker() {
     echo "#### Installing docker ####"
     sudo apt-get remove docker docker-engine docker.io -y
-    sudo apt-get install  apt-transport-https ca-certificates curl software-properties-common -y
+    sudo apt-get install  apt-transport-https ca-certificates curl software-properties-common -y || fail
     curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo apt-key add -
     echo "#### Docker key ####"
     sudo apt-key fingerprint 0EBFCD88
@@ -506,12 +506,12 @@ install_docker() {
        $(lsb_release -cs) \
        stable"
     sudo apt-get update
-    sudo apt-get install docker-ce -y
+    sudo apt-get install docker-ce -y || fail
 
     # install docker-compose
     sudo curl -L https://github.com/docker/compose/releases/download/1.18.0/docker-compose-`uname -s`-`uname -m` -o /usr/local/bin/docker-compose
     sudo chmod +x /usr/local/bin/docker-compose
-    docker-compose --version
+    docker-compose --version || fail
 
     # install nvidia-docker
     # If you have nvidia-docker 1.0 installed: we need to remove it and all existing GPU containers
@@ -527,35 +527,35 @@ install_docker() {
     sudo apt-get update
 
     # Install nvidia-docker2 and reload the Docker daemon configuration
-    sudo apt-get install -y nvidia-docker2
+    sudo apt-get install -y nvidia-docker2 || fail
     sudo pkill -SIGHUP dockerd
 }
 
 install_sqlitebrowser() {
     sudo add-apt-repository -y ppa:linuxgndu/sqlitebrowser
     sudo apt-get update
-    sudo apt-get install sqlitebrowser -y
+    sudo apt-get install sqlitebrowser -y || fail
 }
 
 install_duplicity() {
-    sudo apt-get install -y duplicity
-    sudo apt-get install --reinstall python-gi -y
-    sudo apt-get install python3-pyside -y
+    sudo apt-get install -y duplicity || fail
+    sudo apt-get install --reinstall python-gi -y || fail
+    sudo apt-get install python3-pyside -y || fail
 }
 
 install_trezord() {
     echo "######### Installing trezord #########"
 
-    sudo apt-get install libudev-dev libusb-1.0-0-dev libfox-1.6-dev python3-dev -y
+    sudo apt-get install libudev-dev libusb-1.0-0-dev libfox-1.6-dev python3-dev -y || fail
 
-    pip3 install trezor --force-reinstall --upgrade --user
+    pip3 install trezor --force-reinstall --upgrade --user || fail
 
     wget http://security.ubuntu.com/ubuntu/pool/universe/libm/libmicrohttpd/libmicrohttpd10_0.9.44+dfsg-1ubuntu2_amd64.deb
-    sudo dpkg -i libmicrohttpd10_0.9.44+dfsg-1ubuntu2_amd64.deb
+    sudo dpkg -i libmicrohttpd10_0.9.44+dfsg-1ubuntu2_amd64.deb || fail
     rm libmicrohttpd10_0.9.44+dfsg-1ubuntu2_amd64.deb
 
     wget https://wallet.trezor.io/data/bridge/2.0.27/trezor-bridge_2.0.27_amd64.deb
-    sudo dpkg -i trezor-bridge_2.0.27_amd64.deb
+    sudo dpkg -i trezor-bridge_2.0.27_amd64.deb || fail
     rm trezor-bridge_2.0.27_amd64.deb
 
     # write udev
@@ -583,7 +583,7 @@ install_vscode() {
     wget --referer 'https://code.visualstudio.com/docs/?dv=linux64_deb' https://az764295.vo.msecnd.net/stable/dea8705087adb1b5e5ae1d9123278e178656186a/code_1.30.1-1545156774_amd64.deb -O vscode.deb || \
     wget https://web.archive.org/web/20181230203854/https://az764295.vo.msecnd.net/stable/dea8705087adb1b5e5ae1d9123278e178656186a/code_1.30.1-1545156774_amd64.deb -O vscode.deb
 
-    sudo dpkg -i vscode.deb
+    sudo dpkg -i vscode.deb || fail
 
     rm vscode.deb
 }
@@ -635,14 +635,14 @@ install_python() {
     python3 -m pip install jupyter tensorflow-gpu gym pandas scipy scipy-image --user
     
     # install poetry
-    sudo apt-get install -y python3-venv
+    sudo apt-get install -y python3-venv || fail
     curl -sSL https://raw.githubusercontent.com/sdispater/poetry/master/get-poetry.py | python3
     
     # install pyenv
     sudo apt-get install -y python3-openssl
     sudo apt-get install -y make build-essential libssl-dev zlib1g-dev libbz2-dev \
         libreadline-dev libsqlite3-dev wget curl llvm libncurses5-dev libncursesw5-dev \
-        xz-utils tk-dev libffi-dev liblzma-dev python-openssl git
+        xz-utils tk-dev libffi-dev liblzma-dev python-openssl git || fail
     curl https://pyenv.run | bash
     pyenv install 3.7.0
 }
@@ -654,8 +654,8 @@ install_keepassx() {
     cd /tmp/keepassx
 
     # install dependencies
-    sudo apt-get install build-essential cmake qtbase5-dev libqt5x11extras5-dev qttools5-dev qttools5-dev-tools libgcrypt20-dev zlib1g-dev libxi-dev libxtst-dev -y
-    sudo apt-get install qt-sdk -y
+    sudo apt-get install build-essential cmake qtbase5-dev ibqt5x11extras5-dev qttools5-dev qttools5-dev-tools libgcrypt20-dev zlib1g-dev libxi-dev libxtst-dev -y || fail
+    sudo apt-get install qt-sdk -y || fail
 
     git clone https://github.com/keepassx/keepassx
     cd keepassx
@@ -663,10 +663,10 @@ install_keepassx() {
 
     mkdir build
     cd build
-    cmake ..
-    make
+    cmake .. || fail
+    make || fail
 
-    sudo make install
+    sudo make install || fail
 }
 
 install_gluster() {
@@ -742,7 +742,7 @@ install_moosefs_chunkserver() {
 }
 
 install_autokey() {
-    pip3 install --user autokey
+    pip3 install --user autokey || fail
     
     # https://askubuntu.com/questions/331207/autokey-inserts-blank-lines
     sudo tee /usr/share/dbus-1/services/org.autokey.Service <<EOL
