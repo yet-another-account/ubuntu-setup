@@ -377,7 +377,7 @@ install_horovod() {
     # cleanup
     rm -rf openmpi
     
-    pip3 install --user horovod || fail
+    HOROVOD_GPU_ALLREDUCE=NCCL pip3 install --user horovod || fail
 }
 
 install_myetherwallet() {
