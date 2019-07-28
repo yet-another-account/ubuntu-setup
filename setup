@@ -362,10 +362,14 @@ install_horovod() {
     mv openmpi-4.0.1 openmpi
     cd openmpi
     ./configure --prefix=/usr/local || fail
-    sudo make all install
-    sudo ldconfig
+    sudo make all install || fail
+    sudo ldconfig || fail
+    cd ..
     
-    pip3 install --user horovod
+    # cleanup
+    rm -rf openmpi
+    
+    pip3 install --user horovod || fail
 }
 
 install_myetherwallet() {
