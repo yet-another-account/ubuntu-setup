@@ -350,6 +350,18 @@ EOL
 
 }
 
+install_horovod() {
+    # install openmpi
+    wget https://download.open-mpi.org/release/open-mpi/v4.0/openmpi-4.0.1.tar.gz -O openmpi.tar.gz || fail
+    tar xf openmpi.tar.gz || fail
+    mv openmpi-4.0.1 openmpi
+    cd openmpi
+    ./configure --prefix=/usr/local || fail
+    sudo make all install
+    
+    pip3 install --user horovod
+}
+
 install_myetherwallet() {
     install git
     cd ~
