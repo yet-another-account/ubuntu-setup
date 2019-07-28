@@ -351,6 +351,11 @@ EOL
 }
 
 install_horovod() {
+    # install gcc 4.8
+    sudo add-apt-repository ppa:ubuntu-toolchain-r/test -y
+    sudo apt-get update
+    sudo apt-get install g++-4.8 -y || fail
+
     # install openmpi
     wget https://download.open-mpi.org/release/open-mpi/v4.0/openmpi-4.0.1.tar.gz -O openmpi.tar.gz || fail
     tar xf openmpi.tar.gz || fail
