@@ -358,6 +358,7 @@ install_horovod() {
     cd openmpi
     ./configure --prefix=/usr/local || fail
     sudo make all install
+    sudo ldconfig
     
     pip3 install --user horovod
 }
