@@ -306,18 +306,26 @@ install_cuda() {
     sudo apt-get install libnvidia-compute-${nv_ver} || fail
     sudo apt-get install nvidia-driver-${nv_ver} nvidia-utils-${nv_ver} nvidia-settings -y || fail
 
-
+    # install cuda
     wget -N ${cuda_url} -O cuda.run
     chmod +x cuda.run
     sudo ./cuda.run --override --silent --toolkit --no-opengl-libs || fail
     rm cuda.run
 
+    # install cudnn
     wget -N ${cudnn_url} -O libcudnn.deb
     sudo dpkg -i libcudnn.deb || fail
     rm libcudnn.deb
 
     sudo apt-get install libcupti-dev -y || fail
 
+    # install nccl2
+    sudo apt-key adv --fetch-keys http://developer.download.nvidia.com/compute/machine-learning/repos/ubuntu1804/x86_64/7fa2af80.pub
+    wget https://developer.download.nvidia.com/compute/machine-learning/repos/ubuntu1804/x86_64/nvidia-machine-learning-repo-ubuntu1804_1.0.0-1_amd64.deb -O nvidia-machine-learning-repo.deb
+    sudo dpkg -i nvidia-machine-learning-repo.deb || fail
+    rm nvidia-machine-learning-repo.deb
+    sudo apt-get update
+    sudo apt-get install libnccl2=2.4.7-1+cuda10.0 libnccl-dev=2.4.7-1+cuda10.0
 
     lspci | grep VGA | grep -qi Intel &&
     sudo tee /usr/share/X11/xorg.conf.d/10-intel.conf<<EOL
