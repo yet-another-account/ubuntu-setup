@@ -837,4 +837,5 @@ EOL
 }
 
 [[ "$1" == "" ]] && (echo "Specify a target!"; exit 1)
+sudo apt-get update
 install $1
