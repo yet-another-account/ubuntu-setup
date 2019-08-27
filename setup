@@ -126,6 +126,11 @@ install_desktop() {
 
     echo 'PATH=$PATH:~/.local/bin:~/bin' >> ~/.bashrc || fail
 
+    echo "Install python-wnck"
+    wget http://archive.ubuntu.com/ubuntu/pool/universe/g/gnome-python-desktop/python-wnck_2.32.0+dfsg-3_amd64.deb
+    dpkg -i python-wnck_2.32.0+dfsg-3_amd64.deb || fail
+    rm python-wnck_2.32.0+dfsg-3_amd64.deb
+
     echo "Patching nosplash"
     tee nosplash.patch<<EOL
 10c10
