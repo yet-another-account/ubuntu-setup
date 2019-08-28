@@ -130,6 +130,9 @@ install_desktop() {
     wget http://archive.ubuntu.com/ubuntu/pool/universe/g/gnome-python-desktop/python-wnck_2.32.0+dfsg-3_amd64.deb
     dpkg -i python-wnck_2.32.0+dfsg-3_amd64.deb || fail
     rm python-wnck_2.32.0+dfsg-3_amd64.deb
+    
+    # fix firefox screen tearing (https://forums.linuxmint.com/viewtopic.php?t=239077)
+    ff_set layers.acceleration.force-enabled 'true'
 
     echo "Patching nosplash"
     tee nosplash.patch<<EOL
@@ -839,6 +842,13 @@ EOL
     dconf write /org/gnome/settings-daemon/plugins/media-keys/custom-keybindings "$overallbindings"
     # dconf write /org/gnome/settings-daemon/plugins/media-keys/custom-keybindings "['/org/gnome/settings-daemon/plugins/media-keys/custom-keybindings/custom0/', '/org/gnome/settings-daemon/plugins/media-keys/custom-keybindings/custom1/', '/org/gnome/settings-daemon/plugins/media-keys/custom-keybindings/custom2/', '/org/gnome/settings-daemon/plugins/media-keys/custom-keybindings/custom3/', '/org/gnome/settings-daemon/plugins/media-keys/custom-keybindings/custom4/', '/org/gnome/settings-daemon/plugins/media-keys/custom-keybindings/custom5/']"
 
+}
+
+# https://askubuntu.com/questions/313483/how-do-i-change-firefoxs-aboutconfig-from-a-shell-script
+ff_set() {
+    cd ~
+    sed -i 's/user_pref("'$1'",.*);/user_pref("'$1'",'$2');/' user.js
+    grep -q $1 user.js || echo "user_pref(\"$1\",$2);" >> user.js
 }
 
 [[ "$1" == "" ]] && (echo "Specify a target!"; exit 1)
