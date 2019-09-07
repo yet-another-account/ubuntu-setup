@@ -100,6 +100,18 @@ install_desktop() {
     sudo snap install --classic slack || fail
     sudo snap install pycharm-community --classic || fail
 
+    # install eclipse cdt (source: https://stackoverflow.com/questions/7163970/how-do-you-automate-the-installation-of-eclipse-plugins-with-command-line)
+    sudo /usr/local/eclipse/eclipse -nosplash \
+      -application org.eclipse.equinox.p2.director \
+      -repository http://download.eclipse.org/releases/indigo/,http://download.eclipse.org/tools/cdt/releases/helios/ \
+      -destination /usr/local/eclipse \
+      -installIU org.eclipse.cdt.feature.group \
+      -installIU org.eclipse.cdt.sdk.feature.group \
+      -installIU org.eclipse.cdt.platform.feature.group \
+      -installIU org.eclipse.cdt.debug.ui.memory.feature.group \
+      -installIU org.eclipse.cdt.debug.edc.feature.group \
+      -installIU org.eclipse.cdt.util.feature.group
+
     # install flatpak
     install-apt flatpak
     flatpak --user remote-add --if-not-exists flathub https://flathub.org/repo/flathub.flatpakrepo || fail
