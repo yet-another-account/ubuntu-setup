@@ -31,6 +31,9 @@ install_base() {
     install python
     install java
     install git
+    
+    # install haskell
+    curl -sSL https://get.haskellstack.org/ | sh
 
     echo "#### Installing cryptsetup (needed for LUKS) ####"
     install-apt cryptsetup
