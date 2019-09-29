@@ -104,6 +104,7 @@ install_desktop() {
     sudo snap install --classic google-cloud-sdk || fail
     sudo snap install --classic slack || fail
     sudo snap install pycharm-community --classic || fail
+    sudo snap install telegram-desktop || fail
     
     # install eclipse cdt (source: https://stackoverflow.com/questions/7163970/how-do-you-automate-the-installation-of-eclipse-plugins-with-command-line)
     sudo eclipse -nosplash \
