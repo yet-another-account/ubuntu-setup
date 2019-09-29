@@ -90,7 +90,9 @@ install_desktop() {
     install-apt rar
     install-apt mpack
     install-apt zstd
-
+    
+    # borg
+    install-apt borgbackup
 
     echo "#### Installing MySQL Workbench ####"
     install-apt mysql-workbench
