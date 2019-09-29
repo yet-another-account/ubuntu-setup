@@ -181,6 +181,11 @@ alias d='docker'
 alias db='docker build'
 alias dr='docker run --runtime=nvidia'
 alias dbr='docker run --rm -it $(docker build -q .)'
+
+alias s='sudo'
+
+alias eba='. env/bin/activate'
+
 EOL
     echo ". ~/aliases" >> ~/.bashrc
 
