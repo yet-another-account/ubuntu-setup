@@ -79,6 +79,8 @@ install_desktop() {
     install-apt ansible
     install-apt silversearcher-ag
     install-apt renameutils
+    install-apt pngcheck
+    install-apt radare2
     
     # all the compression algorithms
     install-apt p7zip
