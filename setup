@@ -82,6 +82,9 @@ install_desktop() {
     install-apt pngcheck
     install-apt radare2
     
+    # kludge: lighttpd depends on this but it doesn't get installed automatically
+    install-apt gamin
+    
     # all the compression algorithms
     install-apt p7zip
     install-apt arj
