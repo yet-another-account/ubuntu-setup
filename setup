@@ -331,7 +331,8 @@ install_cuda() {
     sudo apt-get purge -y nvidia-* libnvidia-* nvidia-*:i386 libnvidia-*:i386
     sudo rm -rf /usr/local/cuda*
     
-    sudo apt-get install pciutils -y || fail
+    # linux-headers-generic is VERY IMPORTANT!
+    sudo apt-get install pciutils linux-headers-generic -y || fail
     
     # cutting edge version for ubuntu
     nv_ver=410
