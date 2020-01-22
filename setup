@@ -332,9 +332,13 @@ install_cuda() {
     sudo rm -rf /usr/local/cuda*
     
     sudo apt-get install pciutils -y || fail
-
+    
     # cutting edge version for ubuntu
     nv_ver=410
+    
+    # If this file exists, it prevents proper DKMS because the installer will try to overwrite it
+    sudo mv /var/crash/nvidia-dkms-${nv_ver}.0.crash /var/crash/nvidia-dkms-${nv_ver}.0.crash.old
+
     cuda_url=https://developer.nvidia.com/compute/cuda/10.0/Prod/local_installers/cuda_10.0.130_410.48_linux
     cudnn_url=http://developer.download.nvidia.com/compute/machine-learning/repos/ubuntu1804/x86_64/libcudnn7_7.4.2.24-1+cuda10.0_amd64.deb
     sudo add-apt-repository ppa:graphics-drivers -y || fail
