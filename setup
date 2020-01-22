@@ -328,7 +328,7 @@ install_cuda() {
     sudo echo test || exit
     
     # remove old
-    sudo apt-get purge -y nvidia-* libnvidia-*
+    sudo apt-get purge -y nvidia-* libnvidia-* nvidia-*:i386 libnvidia-*:i386
     sudo rm -rf /usr/local/cuda*
     
     sudo apt-get install pciutils -y || fail
